@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/", "destination": "/fbla-community-hub/index.html" },
+    { "source": "/:path*", "destination": "/fbla-community-hub/:path*" }
+  ]
+}

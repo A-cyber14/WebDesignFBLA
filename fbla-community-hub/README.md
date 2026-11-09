@@ -13,7 +13,7 @@ A community resource website built with plain **HTML, CSS, and JavaScript**: no 
 
 The site doesn't need a server or an internet connection. Without internet, it uses a backup system font instead of Atkinson Hyperlegible, and everything else works the same.
 
-**To publish it free (GitHub Pages):** create a GitHub repository, upload every file in this folder, then go to *Settings → Pages → Deploy from branch → main → / (root)*. Your site will be live at `https://YOUR-USERNAME.github.io/REPO-NAME/`. Netlify Drop (drag the folder onto app.netlify.com/drop) also works.
+**Live site (Vercel):** the GitHub repo is connected to Vercel, so every push to `main` redeploys automatically. Because this folder sits inside the repo (not at its root), `vercel.json` at the repo root rewrites every URL to `fbla-community-hub/`, and `.vercelignore` keeps unrelated folders out of the deployment.
 
 ---
 
