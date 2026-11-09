@@ -1,7 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <!-- Riverbend Connect logo: a teal circle with a winding river and a house -->
-  <circle cx="20" cy="20" r="20" fill="#0B6E69"/>
-  <path d="M9 30 C 16 26, 13 20, 20 18 S 30 14, 31 9" fill="none" stroke="#F4B942" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M11 17 L16 12.5 L21 17 V22 H11 Z" fill="#FFFFFF"/>
-  <rect x="14.5" y="18" width="3" height="4" fill="#0B6E69"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pinellas Connect logo">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a8fe0"/>
+      <stop offset="1" stop-color="#0b2540"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5ac8d8"/>
+      <stop offset="1" stop-color="#9be3ea"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#sky)"/>
+  <!-- Location pin -->
+  <path d="M32 11c-8 0-14 6-14 13.6C18 34.5 32 46 32 46s14-11.5 14-21.4C46 17 40 11 32 11Z" fill="#fff"/>
+  <circle cx="32" cy="24.5" r="5.2" fill="#0b4f8a"/>
+  <!-- Gulf waves -->
+  <path d="M8 46c4 0 4-3 8-3s4 3 8 3 4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3" fill="none" stroke="url(#sea)" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M8 54c4 0 4-3 8-3s4 3 8 3 4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3" fill="none" stroke="#5ac8d8" stroke-opacity=".55" stroke-width="3.2" stroke-linecap="round"/>
 </svg>

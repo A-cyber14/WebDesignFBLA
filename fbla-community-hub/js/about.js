@@ -1,8 +1,7 @@
 /* =========================================================
-   about.js — Shows the success metrics collected by trackEvent().
+   about.js — Success metrics demo + the full list of data sources.
    ========================================================= */
 
-// The metrics we track, with a plain-English label for each
 const metricLabels = {
   searches: "Searches made",
   searchesWithNoResults: "Searches with no results",
@@ -17,18 +16,15 @@ const metricLabels = {
 };
 
 function showMetrics() {
-  const metrics = JSON.parse(localStorage.getItem("metrics") || "{}");
+  const metrics = storageGet("metrics", {});
   let rows = "";
-
   for (const key in metricLabels) {
     rows += `<tr><th scope="row">${metricLabels[key]}</th><td>${metrics[key] || 0}</td></tr>`;
   }
   document.getElementById("metrics-body").innerHTML = rows;
 
-  // Two calculated rates (shown as percentages)
   const searches = metrics.searches || 0;
   const votes = (metrics.helpfulYes || 0) + (metrics.helpfulNo || 0);
-
   document.getElementById("zero-rate").textContent =
     searches ? Math.round((metrics.searchesWithNoResults || 0) / searches * 100) + "%" : "—";
   document.getElementById("helpful-rate").textContent =
@@ -36,8 +32,26 @@ function showMetrics() {
 }
 
 document.getElementById("reset-metrics").addEventListener("click", function () {
-  localStorage.removeItem("metrics");
+  storageSet("metrics", {});
   showMetrics();
 });
 
 showMetrics();
+
+
+// Data sources: one row per listing, built from data.js so it can never drift
+document.getElementById("data-sources").innerHTML = resources
+  .slice()
+  .sort(function (a, b) { return a.name.localeCompare(b.name); })
+  .map(function (r) {
+    return `<tr><th scope="row">${r.name}</th>
+      <td><a href="${r.source}" target="_blank" rel="noopener">${r.source.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}</a></td>
+      <td>${formatVerified(r.verified)}</td></tr>`;
+  }).join("");
+
+document.getElementById("event-sources").innerHTML = events
+  .map(function (e) {
+    return `<tr><th scope="row">${e.title}</th>
+      <td><a href="${e.source}" target="_blank" rel="noopener">${e.organizer}</a></td>
+      <td>${formatVerified(LAST_VERIFIED)}</td></tr>`;
+  }).join("");

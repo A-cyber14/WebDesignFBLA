@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Search and filter Riverbend's local food, housing, health, education, job, and family resources.">
-  <title>Resource Directory | Riverbend Connect</title>
+  <meta name="description" content="Search verified Pinellas County resources by category, city, and cost.">
+  <meta name="theme-color" content="#fbfaf7">
+  <title>Resource Directory | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -16,32 +18,37 @@
 
   <!-- ===== Help bar (same on every page) ===== -->
   <div class="help-bar">
-    <p><strong>Need help now?</strong>
-      Emergency: <a href="tel:911">911</a> ·
-      Crisis line (call or text): <a href="tel:988">988</a> ·
-      Local services: <a href="tel:211">211</a></p>
+    <div class="container">
+      <p><strong>Need help now?</strong>
+        Emergency <a href="tel:911">911</a> ·
+        Crisis line (call or text) <a href="tel:988">988</a> ·
+        Local services <a href="tel:211">211</a></p>
+      <p><a class="help-storm" href="emergency.html">Hurricane &amp; evacuation info →</a></p>
+    </div>
   </div>
 
   <!-- ===== Header and navigation (same on every page) ===== -->
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html">
-        <img src="images/logo.svg" alt="" width="40" height="40">
-        <span>Riverbend <strong>Connect</strong></span>
+        <img src="images/logo.svg" alt="" width="32" height="32">
+        <span>Pinellas <strong>Connect</strong></span>
       </a>
-      <button id="menu-button" class="menu-button" aria-expanded="false" aria-controls="main-nav">
+      <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
         <span aria-hidden="true">☰</span> Menu
       </button>
       <nav id="main-nav" class="main-nav" aria-label="Main">
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="resources.html" aria-current="page">Resources</a></li>
+          <li><a href="map.html">Map</a></li>
           <li><a href="events.html">Events</a></li>
-          <li><a href="saved.html">Saved <span id="saved-count" class="badge" hidden>0</span></a></li>
+          <li><a class="nav-emergency" href="emergency.html"><span class="nav-dot" aria-hidden="true"></span>Hurricane &amp; Emergency</a></li>
+          <li><a href="saved.html">Saved <span id="saved-count" class="count-badge" hidden>0</span></a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
-        <button id="text-size-button" class="text-size-button" aria-pressed="false">
+        <button id="text-size-button" class="text-size-button" type="button" aria-pressed="false">
           <span aria-hidden="true">A+</span> Larger text
         </button>
       </nav>
@@ -51,28 +58,23 @@
   <main id="main">
     <section class="page-header">
       <div class="container">
-        <p class="eyebrow">Resource Directory</p>
-        <h1>Find local resources</h1>
-        <p>Search by name or keyword, then narrow the list by category, who it serves, or cost.</p>
+        <p class="eyebrow"><span data-icon="search"></span> Resource Directory</p>
+        <h1>Find local resources.</h1>
+        <p>Search verified Pinellas County services, then narrow by category, location, and cost.</p>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" style="padding-top:1rem">
       <div class="container">
-        <!-- Search and filter controls -->
         <form id="filter-form" class="filter-panel" role="search" aria-label="Filter resources">
-          <div class="field field-search">
+          <div class="field">
             <label for="search">Search</label>
-            <input id="search" type="search" placeholder="e.g. groceries, rent, tutoring" autocomplete="off">
+            <input id="search" type="search" placeholder="e.g. groceries, eviction, GED, bus" autocomplete="off">
           </div>
           <div class="field">
-            <label for="audience">Who it serves</label>
-            <select id="audience">
-              <option value="all">Everyone (all)</option>
-              <option value="Families">Families</option>
-              <option value="Youth">Youth</option>
-              <option value="Seniors">Seniors</option>
-              <option value="Veterans">Veterans</option>
+            <label for="city">Location</label>
+            <select id="city" data-fill="cities">
+              <option value="all">All of Pinellas County</option>
             </select>
           </div>
           <div class="field">
@@ -80,70 +82,90 @@
             <select id="sort">
               <option value="az">Name (A–Z)</option>
               <option value="za">Name (Z–A)</option>
+              <option value="urgent">Crisis lines first</option>
             </select>
           </div>
           <div class="field field-checkbox">
             <input id="free-only" type="checkbox">
             <label for="free-only">Free only</label>
           </div>
-          <button id="reset-button" class="button button-outline button-small" type="button">Reset filters</button>
         </form>
 
         <div id="category-buttons" class="chips" role="group" aria-label="Filter by category"></div>
 
-        <p id="results-count" class="results-count" aria-live="polite"></p>
-        <div id="results" class="card-grid"></div>
+        <div class="results-bar">
+          <p id="results-count" class="results-count" aria-live="polite"></p>
+          <button id="reset-button" class="button button-small button-quiet" type="button">Reset filters</button>
+        </div>
+        <p id="results-note" class="results-note"></p>
+        <div id="results" class="card-grid" style="margin-top:1rem"></div>
 
         <div id="no-results" class="empty-state" hidden>
-          <p class="empty-icon" aria-hidden="true">🔍</p>
+          <span class="empty-icon"><span data-icon="search"></span></span>
           <h2>No resources match your search</h2>
-          <p>Try a different word, remove a filter, or call <a href="tel:211">211</a> to speak with a local resource specialist.</p>
+          <p>Try a different word or remove a filter. You can also call or text <a href="tel:211">211</a> to talk with a resource specialist, any time, day or night.</p>
           <button id="reset-button-2" class="button" type="button">Show all resources</button>
+        </div>
+
+        <div class="disclaimer">
+          <span data-icon="info"></span>
+          <p>“Serves all of Pinellas” means the organization or its source says it serves the whole county. Listings marked “call to confirm area” are in a specific city, and the source didn't say who else they serve.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ===== Resource details pop-up ===== -->
   <dialog id="details-dialog" aria-labelledby="dialog-title">
     <div class="dialog-inner">
-      <button id="close-dialog" class="close-button" aria-label="Close details">✕</button>
+      <button id="close-dialog" class="close-button" type="button" aria-label="Close details">✕</button>
       <div id="dialog-content"></div>
     </div>
   </dialog>
 
   <!-- ===== Footer (same on every page) ===== -->
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <p class="footer-logo">Riverbend <strong>Connect</strong></p>
-        <p>Connecting every neighbor with the resources they need.</p>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-logo">Pinellas <strong>Connect</strong></p>
+          <p>Trusted local services, programs, and support across Pinellas County, Florida, verified against official sources.</p>
+        </div>
+        <nav aria-label="Find help">
+          <h2>Find help</h2>
+          <ul>
+            <li><a href="resources.html">Resource Directory</a></li>
+            <li><a href="map.html">Resource Map</a></li>
+            <li><a href="events.html">Community Events</a></li>
+            <li><a href="emergency.html">Hurricane &amp; Emergency</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Your list">
+          <h2>Your list</h2>
+          <ul>
+            <li><a href="saved.html">Saved Resources</a></li>
+            <li><a href="contact.html">Suggest a Resource</a></li>
+            <li><a href="contact.html">Report Outdated Info</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="About this site">
+          <h2>About</h2>
+          <ul>
+            <li><a href="about.html">Our Mission</a></li>
+            <li><a href="about.html#verification">How We Verify</a></li>
+            <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+          </ul>
+        </nav>
       </div>
-      <nav aria-label="Footer">
-        <h2>Explore</h2>
-        <ul>
-          <li><a href="resources.html">Resource Directory</a></li>
-          <li><a href="events.html">Community Events</a></li>
-          <li><a href="saved.html">My Saved List</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="About this site">
-        <h2>About</h2>
-        <ul>
-          <li><a href="about.html">Our Mission</a></li>
-          <li><a href="about.html#sources">Sources &amp; Credits</a></li>
-          <li><a href="contact.html">Contact &amp; Feedback</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div class="container footer-bottom">
-      <p>© <span id="year"></span> Riverbend Connect — an FBLA Website Design project.
-        <strong>Demo notice:</strong> Riverbend is a fictional community, and all listings and events are sample data.</p>
+      <div class="footer-bottom">
+        <p><strong>Please confirm before you go.</strong> Listings were checked against official sources on the date shown on each one, but hours and services change. Contact the organization directly to confirm. In an emergency, call 911.</p>
+        <p>© <span class="js-year">2026</span> Pinellas Connect, an independent student project for the FBLA Website Design event. Not affiliated with Pinellas County Government or any organization listed.</p>
+      </div>
     </div>
   </footer>
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
+  
   <script src="js/resources.js"></script>
 </body>
 </html>

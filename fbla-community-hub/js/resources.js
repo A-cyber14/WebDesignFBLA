@@ -1,87 +1,86 @@
 /* =========================================================
    resources.js — Search and filters for the Resource Directory.
+   Search, category, location, and cost filters all work together.
    ========================================================= */
 
-// Grab the page elements we need
 const searchInput = document.getElementById("search");
-const audienceSelect = document.getElementById("audience");
+const citySelect = document.getElementById("city");
 const freeCheckbox = document.getElementById("free-only");
 const sortSelect = document.getElementById("sort");
 const categoryButtonsBox = document.getElementById("category-buttons");
 const resultsList = document.getElementById("results");
 const resultsCount = document.getElementById("results-count");
+const resultsNote = document.getElementById("results-note");
 const noResults = document.getElementById("no-results");
 
-// The category that is currently selected ("all" = no filter)
 let selectedCategory = "all";
 
 
-/* ---------- Build the category filter buttons ---------- */
+/* ---------- Category filter buttons ---------- */
 function createCategoryButtons() {
-  let html = `<button class="chip" data-category="all" aria-pressed="true">All</button>`;
+  let html = `<button class="chip" type="button" data-category="all" aria-pressed="true">All</button>`;
   categories.forEach(function (category) {
-    html += `<button class="chip" data-category="${category.id}" aria-pressed="false">
-               <span aria-hidden="true">${category.icon}</span> ${category.name}
+    html += `<button class="chip" type="button" data-category="${category.id}" aria-pressed="false" style="--cat:${category.color}">
+               ${icon(category.icon)} ${category.name}
              </button>`;
   });
   categoryButtonsBox.innerHTML = html;
 }
 
-// Highlights the selected category button
 function selectCategory(categoryId) {
   selectedCategory = categoryId;
-  const buttons = categoryButtonsBox.querySelectorAll(".chip");
-  buttons.forEach(function (button) {
+  categoryButtonsBox.querySelectorAll(".chip").forEach(function (button) {
     button.setAttribute("aria-pressed", button.dataset.category === categoryId);
   });
 }
 
 
-/* ---------- The main function: filter, sort, and display ---------- */
+/* ---------- Filter, sort, display ---------- */
 function showResults() {
   const searchText = searchInput.value.trim().toLowerCase();
-  const audience = audienceSelect.value;
+  const city = citySelect.value;
 
-  // Keep only the resources that pass EVERY filter
   const matches = resources.filter(function (resource) {
-    const category = getCategory(resource.category);
+    const categoryNames = resource.categories.map(function (id) { return getCategory(id).name; }).join(" ");
+    const places = resource.locations.map(function (l) { return l.address; }).join(" ");
+    const textToSearch = (resource.name + " " + resource.description + " " + categoryNames + " " + places + " " + (resource.areaNote || "")).toLowerCase();
 
-    // Search looks at the name, description, and category name
-    const textToSearch = (resource.name + " " + resource.description + " " + category.name).toLowerCase();
-    const matchesSearch = textToSearch.includes(searchText);
-
-    const matchesCategory = selectedCategory === "all" || resource.category === selectedCategory;
-    const matchesAudience = audience === "all" || resource.audience.includes(audience);
-    const matchesCost = !freeCheckbox.checked || resource.cost === "Free";
-
-    return matchesSearch && matchesCategory && matchesAudience && matchesCost;
+    return textToSearch.includes(searchText) &&
+           (selectedCategory === "all" || resource.categories.includes(selectedCategory)) &&
+           servesCity(resource, city) &&
+           (!freeCheckbox.checked || resource.free);
   });
 
-  // Sort A–Z or Z–A by name
-  matches.sort(function (a, b) {
-    return a.name.localeCompare(b.name);
-  });
-  if (sortSelect.value === "za") matches.reverse();
+  if (sortSelect.value === "urgent") {
+    // Crisis lines first, then A–Z
+    matches.sort(function (a, b) { return (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0) || a.name.localeCompare(b.name); });
+  } else {
+    matches.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    if (sortSelect.value === "za") matches.reverse();
+  }
 
-  // Build the cards
-  let html = "";
-  matches.forEach(function (resource) {
-    html += createResourceCard(resource);
-  });
-  resultsList.innerHTML = html;
+  resultsList.innerHTML = matches.map(createResourceCard).join("");
 
-  // Update the count (screen readers announce it because of aria-live)
-  resultsCount.textContent = `Showing ${matches.length} of ${resources.length} resources`;
+  resultsCount.textContent = `Showing ${matches.length} of ${resources.length} resources` + (city !== "all" ? ` available in ${city}` : "");
+  resultsNote.textContent = city !== "all" ? "Includes services for all of Pinellas County, plus places located in " + city + "." : "";
   noResults.hidden = matches.length > 0;
+
+  // Keep the address bar in sync so results can be shared or bookmarked
+  const params = new URLSearchParams();
+  if (searchInput.value.trim()) params.set("search", searchInput.value.trim());
+  if (selectedCategory !== "all") params.set("category", selectedCategory);
+  if (city !== "all") params.set("city", city);
+  const query = params.toString();
+  try {
+    history.replaceState(null, "", query ? "?" + query : window.location.pathname);
+  } catch (error) { /* some browsers block this for local files */ }
 
   return matches.length;
 }
 
-
-/* ---------- Reset every filter ---------- */
 function resetFilters() {
   searchInput.value = "";
-  audienceSelect.value = "all";
+  citySelect.value = "all";
   freeCheckbox.checked = false;
   sortSelect.value = "az";
   selectCategory("all");
@@ -92,23 +91,18 @@ function resetFilters() {
 /* ---------- Connect the controls ---------- */
 createCategoryButtons();
 
-// Results update as the user types
 searchInput.addEventListener("input", showResults);
-
-// When the user finishes a search (presses Enter or leaves the box),
-// record it for our metrics, including searches that found nothing.
 searchInput.addEventListener("change", function () {
   if (searchInput.value.trim() === "") return;
   trackEvent("searches");
   if (showResults() === 0) trackEvent("searchesWithNoResults");
 });
 
-// Pressing Enter in the search box should not reload the page
 document.getElementById("filter-form").addEventListener("submit", function (event) {
   event.preventDefault();
 });
 
-audienceSelect.addEventListener("change", function () { trackEvent("filtersUsed"); showResults(); });
+citySelect.addEventListener("change", function () { trackEvent("filtersUsed"); showResults(); });
 freeCheckbox.addEventListener("change", function () { trackEvent("filtersUsed"); showResults(); });
 sortSelect.addEventListener("change", showResults);
 
@@ -125,18 +119,13 @@ document.getElementById("reset-button-2").addEventListener("click", resetFilters
 
 
 /* ---------- Read settings from the web address ---------- */
-// Links like resources.html?category=food or ?search=rent
-// open this page with that filter already applied.
+// e.g. resources.html?category=food&city=Largo or ?search=rent
 const urlSettings = new URLSearchParams(window.location.search);
-
 if (urlSettings.get("search")) {
   searchInput.value = urlSettings.get("search");
   trackEvent("searches");
 }
-if (getCategory(urlSettings.get("category"))) {
-  selectCategory(urlSettings.get("category"));
-}
+if (getCategory(urlSettings.get("category"))) selectCategory(urlSettings.get("category"));
+if (cities.includes(urlSettings.get("city"))) citySelect.value = urlSettings.get("city");
 
-if (showResults() === 0 && urlSettings.get("search")) {
-  trackEvent("searchesWithNoResults");
-}
+if (showResults() === 0 && urlSettings.get("search")) trackEvent("searchesWithNoResults");

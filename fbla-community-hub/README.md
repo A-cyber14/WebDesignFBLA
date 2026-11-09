@@ -1,103 +1,99 @@
-# Riverbend Connect — FBLA Website Design 2026–2027
+# Pinellas Connect — FBLA Website Design 2026–2027
 
-A community resource website built with plain **HTML, CSS, and JavaScript**: no frameworks, no installation, and no build step.
+A community resource website for **Pinellas County, Florida**, built with plain **HTML, CSS, and JavaScript**: no frameworks, no installation, and no build step.
 
-> **Demo notice:** Riverbend is a fictional town. All organizations, addresses, phone numbers (555-01XX), and events are sample data. The 911, 988, and 211 numbers are real national services.
+Every organization and event is **real**. Each listing was checked against the organization's own website or an official government page, and it shows the date it was verified and a link to the source.
+
+> Pinellas Connect is an independent student project. It is not affiliated with Pinellas County Government or any listed organization.
 
 ---
 
 ## How to run it
 
-1. Open the `fbla-community-hub` folder.
-2. Double-click `index.html`. It opens in any browser (Chrome, Safari, Edge, Firefox).
-
-The site doesn't need a server or an internet connection. Without internet, it uses a backup system font instead of Atkinson Hyperlegible, and everything else works the same.
-
-**Live site (Vercel):** the GitHub repo is connected to Vercel, so every push to `main` redeploys automatically. Because this folder sits inside the repo (not at its root), `vercel.json` at the repo root rewrites every URL to `fbla-community-hub/`, and `.vercelignore` keeps unrelated folders out of the deployment.
+- **Live site:** the GitHub repo is connected to Vercel, so every push to `main` redeploys automatically. Because this folder sits inside the repo (not at its root), `vercel.json` at the repo root serves `fbla-community-hub/` at the site's root URL, and `.vercelignore` keeps unrelated folders out of the deployment.
+- **On a laptop:** double-click `index.html`. The directory, search, filters, saved list, and emergency page all work offline. The map needs internet for its map tiles; offline, the Map page automatically switches to its list view.
 
 ---
+
+## Pages
+
+| Page | What it does |
+|---|---|
+| `index.html` | Hero search (keyword + category + city), category tiles, live map preview, "Start here" services, hurricane banner, next events, trust section |
+| `resources.html` | Directory with search, 12 category chips, city filter, "Free only", sorting. Filters can be shared through the URL (`?search=&category=&city=`) |
+| `map.html` | Interactive Leaflet map with category/city/search filters, preview cards, directions, click-to-call, and a full list view |
+| `events.html` | Verified upcoming events with type and city filters. Events disappear automatically when they end, and an empty state links to official calendars |
+| `emergency.html` | Hurricane and disaster resources: tappable emergency numbers, plus official links grouped into Before / Flooding / During / After |
+| `saved.html` | Saved resources (stored in this browser) with printing |
+| `about.html` | Mission, verification method, design decisions, accessibility, KPIs and a live metrics demo, and a source table generated from the data |
+| `contact.html` | Suggest a resource or report outdated info, with form validation |
 
 ## File structure
 
 ```
 fbla-community-hub/
-├── index.html        Home: hero search, categories, featured resources, events
-├── resources.html    Resource Directory with search + filters
-├── events.html       Community Events with filters
-├── saved.html        The user's saved (favorite) resources + print
-├── about.html        Mission, planning process, design decisions, accessibility,
-│                     success metrics, sources & credits
-├── contact.html      Feedback / suggest-a-resource form with validation
-├── css/styles.css    ALL styling for every page (one file = consistent design)
-├── images/           logo.svg and hero.svg (original artwork)
+├── *.html            8 pages (header, nav, and footer are identical on every page)
+├── css/styles.css    ALL styling: design tokens at the top, mobile-first
+├── images/logo.svg   Original logo
 └── js/
-    ├── data.js       ALL the content: categories, resources, events
-    ├── main.js       Shared code used on every page
-    ├── home.js       Fills in the home page
-    ├── resources.js  Search, filters, and sorting
-    ├── events.js     Event filters
-    ├── saved.js      Saved list, print, clear
-    ├── about.js      Displays the live metrics table
+    ├── data.js       ALL content: cities, categories, resources, events, event sources
+    ├── main.js       Shared code: icons, storage, favorites, cards, details dialog, metrics
+    ├── maptools.js   Shared map helpers (tile layer + pins)
+    ├── home.js       Home page
+    ├── resources.js  Directory search + filters
+    ├── map.js        Map page
+    ├── events.js     Events page
+    ├── saved.js      Saved list
+    ├── about.js      Metrics demo + source tables
     └── contact.js    Form validation
 ```
 
-Every page loads scripts in this order: `data.js` → `main.js` → the page's own script. That way the data exists before any code tries to use it.
+Script order on every page: `data.js` → `main.js` → (Leaflet + `maptools.js` on Home/Map) → the page's own script.
 
 ---
 
-## How the code works
+## How the data works (`js/data.js`)
 
-### Storing and displaying resources
-- `data.js` holds three **arrays of objects**: `categories`, `resources`, and `events`. Each resource is an object with fields like `name`, `category`, `phone`, `hours`, `cost`, and `audience`.
-- `createResourceCard(resource)` in `main.js` takes one resource object and returns its HTML as a **template string** (backticks with `${...}`). Every page uses this same function, so all cards look the same.
-- To show a list, the page loops over the array with `forEach`, adds up the card HTML, and puts it on the page with `innerHTML`.
+Each resource is an object like this:
 
-### Search and filters (`resources.js`)
-`showResults()` is the main function. It runs every time any control changes:
-1. **Filter:** `resources.filter(...)` keeps a resource only if it passes *all four* tests: the search text appears in the name, description, or category; the category matches; the audience matches; and it's free (when "Free only" is checked).
-2. **Sort:** `matches.sort(...)` with `localeCompare` sorts by name A–Z, and `.reverse()` flips it for Z–A.
-3. **Display:** builds the cards and updates "Showing X of 20 resources". That line has `aria-live="polite"`, so screen readers announce it.
-4. If nothing matches, it shows the "No resources match" message with a link to 211.
+```js
+{
+  id: "hope-villages-food",
+  name: "Hope Villages of America — Food Distribution Center",
+  categories: ["food"],                    // first = main category
+  area: "countywide",                      // or "unstated"
+  locations: [{ label, address, city, lat, lng, geocoder: "OSM" }],
+  phones: [{ label, number }],
+  website, hours, eligibility, cost, free, urgent,
+  source: "https://…",                     // the page we checked
+  verified: "2026-11-09"
+}
+```
 
-**URL parameters:** links like `resources.html?category=food` or the home-page search (`?search=rent`) are read with `URLSearchParams`, so the page opens with that filter already applied. The home-page search box is a plain HTML `<form method="get">`, so it needs no JavaScript.
+**Accuracy rules:**
+- If the source didn't say something, the field says **"Not listed."** Nothing was guessed.
+- `area: "countywide"` only when the source says the organization serves all of Pinellas (or it's a county or state agency). Otherwise it's `"unstated"`, and the card says "call to confirm area."
+- **Coordinates** come from geocoding each verified address with OpenStreetMap Nominatim or the U.S. Census Bureau Geocoder. Addresses that couldn't be matched to a building are not mapped.
+- **Domestic violence services are intentionally not mapped.**
 
-### Favorites (`main.js`)
-- Saved resource ids are stored in **localStorage** as a list, e.g. `[1, 5, 12]`. `JSON.stringify` turns the list into text to save it, and `JSON.parse` turns it back into a list.
-- `toggleFavorite(id)` adds or removes an id. The Save button uses `aria-pressed="true/false"` so screen readers announce whether it's saved.
-- One `document.addEventListener("click", ...)` handles every "View details" and "Save" button on every page. This is called **event delegation**: it works even for cards that are created after the page loads.
+**City filter logic** (`servesCity()` in `main.js`): a resource appears for a city if it serves the whole county, has a location in that city, or doesn't state an area and has no physical location.
 
-### Details pop-up
-Uses the built-in HTML `<dialog>` element. `dialog.showModal()` opens it. The browser automatically traps keyboard focus inside and closes it with Escape, which gives you an accessible pop-up with very little code.
+**Events** use real start and end times (`"2026-11-10T10:00:00-05:00"`). `upcomingEvents()` hides any event whose end time has passed, so the site never shows an expired event as upcoming.
 
-### Events always look "upcoming"
-Each event has `daysFromToday` instead of a fixed date. `getEventDate()` adds that many days to today's date. This keeps the demo from showing past events, whether you present in February or June.
+### ⚠️ Keeping it current (important before you present)
 
-### Success metrics (`trackEvent` in `main.js`)
-`trackEvent("searches")` adds 1 to a counter saved in localStorage. The site counts searches, zero-result searches, filters used, details opened, saves, phone taps, helpful/not-helpful votes, prints, and contact forms. The About page reads these counters and shows them in a table, plus two calculated percentages. On a real site, a tool like Google Analytics 4 or Plausible would do this for all visitors.
-
-### Contact form (`contact.js`)
-`novalidate` turns off the browser's pop-up bubbles so the page can show its own clear error messages under each field. A **regular expression** checks the email format. Invalid fields get `aria-invalid="true"` and keyboard focus moves to the first error. The thank-you message uses `textContent` (not `innerHTML`) for the user's name, which is safer for text a user types.
-
-### Responsive design (`styles.css`)
-- The CSS is **mobile-first**: the basic styles are for phones, and two `@media (min-width: ...)` sections add tablet (640px+) and desktop (960px+) layouts.
-- Layouts use **CSS Grid**. For example, `.card-grid` has 1 column on phones, 2 on tablets, and 3 on desktops.
-- On phones, the navigation hides behind a **Menu** button. `setupMenu()` toggles the class `open` and updates `aria-expanded`.
-- **CSS variables** at the top (`--primary`, `--accent`, ...) control every color, so changing one line re-colors the whole site.
-- "Larger text" adds the class `large-text` to `<html>`, which raises the base font size. Because sizes use `rem` units, everything scales together.
+- **Events expire.** The events verified on Nov 9, 2026 all end by Nov 17, 2026. After that, the Events page shows its empty state with official calendars. Before presenting, check the sources listed in `eventSources` and add new events with the same fields.
+- **Re-verify listings** every few months: open each `source`, update anything that changed, and set `verified` (and `LAST_VERIFIED`) to the new date.
 
 ---
 
-## How to customize
+## Key features explained
 
-| To change... | Edit... |
-|---|---|
-| Resources, events, categories | `js/data.js` (copy an object, keep the same fields, give it a new `id`) |
-| Colors | the `:root` variables at the top of `css/styles.css` |
-| Featured resources on the home page | `featuredIds` in `js/home.js` |
-| Town name | search all files for "Riverbend" |
-| Navigation links | the `<nav>` in **every** HTML file (they must stay identical) |
-
-**Strong suggestion:** replace the sample data with **real, verified organizations from your own community**, and cite where you verified each one (official websites, a phone call, your county's 211 listing). Real local content is much more convincing to judges than a fictional town. If you do this, also update the demo notices in the footer and on the About page.
+- **Search + filters** (`resources.js`): `filter()` keeps a resource only if it passes all four tests (search text, category, city, and free). Results update as you type, and the count is announced to screen readers through `aria-live`.
+- **Map** (`map.js`): uses [Leaflet](https://leafletjs.com) with OpenStreetMap tiles. Google Maps and Mapbox require an API key and a billing account; this setup needs neither. Organizations at the same address share one pin with a number on it. The list view shows the same results, so nothing is map-only.
+- **Favorites** (`main.js`): saved ids are stored in `localStorage`. All storage access is wrapped in try/catch, so the site still works when storage is blocked.
+- **Details dialog**: the native `<dialog>` element traps focus and closes with Escape.
+- **Design**: Apple-inspired. It uses the system font (San Francisco on Apple devices, with Inter as fallback), large tight headlines, frosted-glass navigation, soft shadows, and gentle scroll-reveal animations that turn off under `prefers-reduced-motion`. The palette is deep Gulf blue, sea glass, and warm sand.
 
 ---
 
@@ -105,33 +101,17 @@ Each event has `daysFromToday` instead of a fixed date. `getEventDate()` adds th
 
 | Time | Section | Show on screen |
 |---|---|---|
-| 0:00–0:45 | **Problem and audience.** Resources are scattered; families, seniors, students, and new residents struggle to find help. | Home page |
-| 0:45–2:00 | **Planning and development.** Five-step process; sitemap and wireframes (bring printed sketches as visual aids); why plain HTML/CSS/JS. | About → "How we planned" |
-| 2:00–4:30 | **Live demo.** Hero search "rent" → filter chips → Free only → View details → Helpful vote → Save → Saved page → Print. Events filters. Contact form errors. | Resources, Saved, Events, Contact |
-| 4:30–5:30 | **Design and accessibility.** Font, colors and contrast ratios, Tab through with the keyboard (skip link, focus outline), Larger text button, resize to phone width. | Any page + a phone/tablet |
-| 5:30–6:30 | **Metrics.** KPI table using the industry terms; then the live demo table showing the actions you just performed. | About → "How we measure success" |
-| 6:30–7:00 | **What makes it stand out + close.** | Home page |
+| 0:00–0:45 | **Problem:** Pinellas services are spread across dozens of sites, and a peninsula county needs hurricane info in one place. | Home |
+| 0:45–1:45 | **Accuracy:** official sources only, verified dates, "Not listed" instead of guesses, geocoded pins. | About → How we verify, source table |
+| 1:45–4:15 | **Live demo:** hero search "food" + Palm Harbor → Details → Save → Map (filter Clearwater, tap a pin, Directions) → List view → Saved → Print | Resources, Map, Saved |
+| 4:15–5:00 | **Emergency page:** tap-to-call tiles, Know Your Zone, no fake live data. | Emergency (on a phone) |
+| 5:00–5:45 | **Design & accessibility:** keyboard tour, Larger text, reduced motion, phone layout. | Any page + phone |
+| 5:45–6:30 | **Metrics:** KPI table, then the live counters from your demo. | About → Metrics |
+| 6:30–7:00 | **Close.** | Home |
 
-**Backup plan:** the site runs offline from local files. Keep a copy on the laptop *and* a USB drive, and open it on a phone and tablet beforehand (the rubric rewards "more than 2 platforms").
+**Before you present:** update events, reset demo metrics, and clear saved resources.
 
-**Before you present:** reset the demo metrics and clear saved resources so your live demo starts from zero.
-
-### Likely Q&A questions
-- *Why no framework?* Faster loading, nothing to install, works offline, and every line is understandable and maintainable.
-- *How would you get real data?* Partner with the local United Way/211, the library, and the city; add an admin review step for "Suggest a resource" submissions.
-- *Is localStorage private?* Yes. It stays in that one browser and is never sent anywhere. The downside is that saved lists don't sync between devices.
-- *What would you add next?* Spanish translation, a map view, an "Open now" filter, and a real backend for form submissions.
-- *How do you know it's accessible?* Contrast ratios meet WCAG 2.2 AA (4.5:1), keyboard-only testing, semantic HTML, labeled inputs, and aria-live announcements.
-
----
-
-## Color contrast (checked with the WCAG formula)
-
-| Pair | Ratio | WCAG AA needs |
-|---|---|---|
-| Body text #1D2A30 on #F8F7F3 | 13.7:1 | 4.5:1 |
-| White on teal button #0B6E69 | 6.1:1 | 4.5:1 |
-| Gray text #4F5D63 on white | 6.8:1 | 4.5:1 |
-| Dark text on amber button #F4B942 | 8.3:1 | 4.5:1 |
-| Amber on footer #0E3B43 | 6.9:1 | 4.5:1 |
-| Error red #B42318 on white | 6.6:1 | 4.5:1 |
+### Likely Q&A
+- *How do you know the info is accurate?* Every listing links to the official page we checked and shows the date we checked it. Where the source was silent, we say so.
+- *Why no Google Maps?* It requires an API key and billing. Leaflet + OpenStreetMap is free and open, and the list view works without the map.
+- *What would you add next?* Spanish and Vietnamese translations (the county's hurricane guide already comes in both), an "Open now" filter, and an admin workflow to re-verify listings on a schedule.

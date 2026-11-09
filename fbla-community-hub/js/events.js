@@ -1,44 +1,53 @@
 /* =========================================================
    events.js — Filters for the Community Events page.
+   Only events whose end time is still in the future are shown.
    ========================================================= */
 
 const typeSelect = document.getElementById("event-type");
-const timeSelect = document.getElementById("event-time");
+const eventCitySelect = document.getElementById("event-city");
 const eventList = document.getElementById("event-list");
 const eventCount = document.getElementById("event-count");
 const noEvents = document.getElementById("no-events");
 
-// Fill the "Event type" drop-down with each type used in data.js
-const eventTypes = [];
-events.forEach(function (event) {
-  if (!eventTypes.includes(event.type)) eventTypes.push(event.type);
-});
-eventTypes.sort().forEach(function (type) {
-  typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
-});
+const upcoming = upcomingEvents();
 
-// Shows only the events that match both drop-downs
+// Fill "Event type" with the types that are actually upcoming
+upcoming.map(function (e) { return e.type; })
+  .filter(function (type, i, all) { return all.indexOf(type) === i; })
+  .sort()
+  .forEach(function (type) { typeSelect.add(new Option(type, type)); });
+
 function showEvents() {
   const type = typeSelect.value;
-  const maxDays = Number(timeSelect.value); // 7, 30, or 365
+  const city = eventCitySelect.value;
 
-  const matches = events.filter(function (event) {
-    const matchesType = type === "all" || event.type === type;
-    const matchesTime = event.daysFromToday <= maxDays;
-    return matchesType && matchesTime;
+  const matches = upcoming.filter(function (event) {
+    return (type === "all" || event.type === type) && (city === "all" || event.city === city);
   });
 
-  let html = "";
-  matches.forEach(function (event) {
-    html += createEventCard(event);
-  });
-  eventList.innerHTML = html;
+  eventList.innerHTML = matches.map(createEventCard).join("");
+  eventCount.textContent = upcoming.length
+    ? `Showing ${matches.length} of ${upcoming.length} upcoming verified events`
+    : "";
 
-  eventCount.textContent = `Showing ${matches.length} upcoming events`;
-  noEvents.hidden = matches.length > 0;
+  if (upcoming.length === 0) {
+    noEvents.innerHTML = eventsEmptyState();
+    noEvents.hidden = false;
+  } else if (matches.length === 0) {
+    noEvents.innerHTML = `<div class="empty-state"><span class="empty-icon">${icon("calendar")}</span>
+      <h3>No events match these filters</h3><p>Try “All types” or “All of Pinellas,” or check the official calendars below.</p></div>`;
+    noEvents.hidden = false;
+  } else {
+    noEvents.hidden = true;
+  }
 }
 
 typeSelect.addEventListener("change", function () { trackEvent("filtersUsed"); showEvents(); });
-timeSelect.addEventListener("change", function () { trackEvent("filtersUsed"); showEvents(); });
+eventCitySelect.addEventListener("change", function () { trackEvent("filtersUsed"); showEvents(); });
+
+// Official calendars (always shown at the bottom of the page)
+document.getElementById("official-calendars").innerHTML = eventSources.map(function (s) {
+  return `<li><a href="${s.url}" target="_blank" rel="noopener">${s.name}<span class="visually-hidden"> (opens in a new tab)</span></a> — ${s.note}</li>`;
+}).join("");
 
 showEvents();
