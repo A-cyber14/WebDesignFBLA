@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Our mission, design process, accessibility features, success metrics, and sources.">
+  <title>About | Riverbend Connect</title>
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ===== Help bar (same on every page) ===== -->
+  <div class="help-bar">
+    <p><strong>Need help now?</strong>
+      Emergency: <a href="tel:911">911</a> ·
+      Crisis line (call or text): <a href="tel:988">988</a> ·
+      Local services: <a href="tel:211">211</a></p>
+  </div>
+
+  <!-- ===== Header and navigation (same on every page) ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.svg" alt="" width="40" height="40">
+        <span>Riverbend <strong>Connect</strong></span>
+      </a>
+      <button id="menu-button" class="menu-button" aria-expanded="false" aria-controls="main-nav">
+        <span aria-hidden="true">☰</span> Menu
+      </button>
+      <nav id="main-nav" class="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="saved.html">Saved <span id="saved-count" class="badge" hidden>0</span></a></li>
+          <li><a href="about.html" aria-current="page">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button id="text-size-button" class="text-size-button" aria-pressed="false">
+          <span aria-hidden="true">A+</span> Larger text
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-header">
+      <div class="container">
+        <p class="eyebrow">About Riverbend Connect</p>
+        <h1>One place to find community help</h1>
+        <p>Our mission is to make every local resource easy to find, easy to understand, and easy to use — for every resident.</p>
+      </div>
+    </section>
+
+    <!-- ===== Problem and audience ===== -->
+    <section class="section">
+      <div class="container two-column">
+        <div>
+          <h2>The problem we solve</h2>
+          <p>Communities offer many helpful programs, but the information is often spread across dozens of separate websites, flyers, and social media pages. Residents who need help the most may not know where to start.</p>
+          <p>Riverbend Connect gathers organizations, programs, and events into one searchable, mobile-friendly directory so residents can find what they need in seconds. When the directory cannot answer a question, we point people to <a href="tel:211">211</a>, a free referral service that connects people with local help across the United States and Canada <a href="#source-8" class="cite">[8]</a>.</p>
+        </div>
+        <div>
+          <h2>Who we serve</h2>
+          <ul class="audience-list">
+            <li><span aria-hidden="true">👨‍👩‍👧</span> <strong>Families</strong> looking for food, childcare, and youth programs</li>
+            <li><span aria-hidden="true">🧓</span> <strong>Seniors</strong> who benefit from larger text and simple navigation</li>
+            <li><span aria-hidden="true">🎓</span> <strong>Students and job seekers</strong> searching for training and work</li>
+            <li><span aria-hidden="true">🌎</span> <strong>New residents</strong> learning what the community offers</li>
+            <li><span aria-hidden="true">🤝</span> <strong>Volunteers and caseworkers</strong> who refer others to services</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Planning process ===== -->
+    <section class="section section-tinted">
+      <div class="container">
+        <div class="section-heading">
+          <h2>How we planned and built the site</h2>
+          <p>We followed a five-step design process.</p>
+        </div>
+        <ol class="timeline">
+          <li>
+            <h3>1. Research</h3>
+            <p>Identified the target audience and the types of resources they need most, and reviewed accessibility and usability guidelines.</p>
+          </li>
+          <li>
+            <h3>2. Plan</h3>
+            <p>Created a sitemap with six pages and sketched wireframes for phone and desktop layouts before writing any code.</p>
+          </li>
+          <li>
+            <h3>3. Design</h3>
+            <p>Built a style guide with one color palette, one readable font family, and reusable components such as cards, buttons, and tags.</p>
+          </li>
+          <li>
+            <h3>4. Develop</h3>
+            <p>Wrote the site in HTML, CSS, and JavaScript with no frameworks, keeping all resource data in one file that is easy to update.</p>
+          </li>
+          <li>
+            <h3>5. Test</h3>
+            <p>Tested on desktop, tablet, and phone screen sizes, checked color contrast, and navigated every page using only a keyboard.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== Design decisions ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Design decisions and why we made them</h2>
+        </div>
+        <div class="decision-grid">
+          <article class="decision">
+            <h3>Readable font</h3>
+            <p>We use Atkinson Hyperlegible, a free typeface designed by the Braille Institute to make letters easier to tell apart for readers with low vision <a href="#source-3" class="cite">[3]</a>.</p>
+          </article>
+          <article class="decision">
+            <h3>Calm, high-contrast colors</h3>
+            <p>Deep teal suggests trust and calm, and warm amber highlights actions. Every text color meets the WCAG 2.2 minimum contrast ratio of 4.5:1 <a href="#source-1" class="cite">[1]</a>, and we checked each color pair with the same contrast formula used by WebAIM's contrast checker <a href="#source-2" class="cite">[2]</a>.</p>
+          </article>
+          <article class="decision">
+            <h3>Search first</h3>
+            <p>The search bar sits at the top of the home page because research by Nielsen Norman Group shows that web users often scan pages in an F-shaped pattern, focusing on the top and left <a href="#source-4" class="cite">[4]</a>.</p>
+          </article>
+          <article class="decision">
+            <h3>Mobile-first layout</h3>
+            <p>Pew Research Center reports that most U.S. adults own a smartphone <a href="#source-6" class="cite">[6]</a>, so we designed for small screens first and then expanded the layout for tablets and computers.</p>
+          </article>
+          <article class="decision">
+            <h3>Consistent cards</h3>
+            <p>Every resource uses the same card layout, which follows the usability principle of “consistency and standards” <a href="#source-5" class="cite">[5]</a>. Users learn the pattern once and can use it everywhere.</p>
+          </article>
+          <article class="decision">
+            <h3>Works offline</h3>
+            <p>All resource data is stored in the site's own files instead of an outside server, so the directory loads quickly and still works if the internet connection is lost.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Accessibility ===== -->
+    <section class="section section-tinted">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Accessibility features</h2>
+          <p>We followed the Web Content Accessibility Guidelines (WCAG) 2.2 <a href="#source-1" class="cite">[1]</a>.</p>
+        </div>
+        <ul class="check-list">
+          <li>“Skip to main content” link for keyboard and screen reader users</li>
+          <li>Every feature works with a keyboard, with a clear focus outline</li>
+          <li>“Larger text” button that is remembered on every page</li>
+          <li>Semantic HTML: header, nav, main, footer, headings, and lists</li>
+          <li>Labels on every form field and clear error messages</li>
+          <li>Live result counts announced to screen readers</li>
+          <li>Buttons and links at least 44 pixels tall for easy tapping</li>
+          <li>Animations turn off for users who prefer reduced motion</li>
+          <li>Decorative images are hidden from screen readers</li>
+          <li>Accessible pop-up built with the HTML dialog element <a href="#source-9" class="cite">[9]</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Metrics ===== -->
+    <section class="section" id="metrics">
+      <div class="container">
+        <div class="section-heading">
+          <h2>How we measure success</h2>
+          <p>These key performance indicators (KPIs) show whether residents are actually finding the help they need. The goals below are our own targets for a launch.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="kpi-table">
+            <caption class="visually-hidden">Success metrics and goals</caption>
+            <thead>
+              <tr><th scope="col">Metric</th><th scope="col">What it tells us</th><th scope="col">Our goal</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Search success rate</th><td>Share of searches that lead a user to open a resource's details</td><td>70% or higher</td></tr>
+              <tr><th scope="row">Zero-result search rate</th><td>Searches that found nothing — shows which resources or keywords are missing</td><td>Under 10%</td></tr>
+              <tr><th scope="row">Helpfulness rating</th><td>“Yes” votes on “Was this information helpful?”</td><td>80% or higher</td></tr>
+              <tr><th scope="row">Conversions</th><td>Taps on phone numbers and saved resources — signs that a user took action</td><td>Grow each month</td></tr>
+              <tr><th scope="row">Engagement and bounce rate</th><td>How long visitors stay and whether they leave after one page</td><td>Bounce rate under 40%</td></tr>
+              <tr><th scope="row">Returning visitors</th><td>People who come back, showing the site is trusted and useful</td><td>25% of visitors</td></tr>
+              <tr><th scope="row">Core Web Vitals</th><td>Google's page-speed measures: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS) <a href="#source-10" class="cite">[10]</a></td><td>“Good” rating: LCP under 2.5 s, INP under 200 ms, CLS under 0.1</td></tr>
+              <tr><th scope="row">Lighthouse scores</th><td>Automated audits for performance, accessibility, and SEO <a href="#source-11" class="cite">[11]</a></td><td>90 or higher in each category</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>After launch, we would collect these numbers with a privacy-friendly analytics tool, review them every month, and use A/B testing to try improvements. Feedback from the Contact page would guide which resources to add next.</p>
+
+        <!-- Live demo of metrics tracked in this browser -->
+        <div class="metrics-demo">
+          <div class="metrics-demo-heading">
+            <div>
+              <h3>Live demo: metrics from this browser</h3>
+              <p>This prototype already counts key actions using the browser's localStorage <a href="#source-12" class="cite">[12]</a>. Use the site, then come back to watch these numbers change.</p>
+            </div>
+            <button id="reset-metrics" class="button button-outline button-small" type="button">Reset demo metrics</button>
+          </div>
+          <div class="rate-boxes">
+            <p class="rate-box"><span id="zero-rate" class="stat-number">—</span> zero-result search rate</p>
+            <p class="rate-box"><span id="helpful-rate" class="stat-number">—</span> helpfulness rating</p>
+          </div>
+          <div class="table-wrap">
+            <table class="kpi-table">
+              <caption class="visually-hidden">Actions counted in this browser</caption>
+              <thead><tr><th scope="col">Action</th><th scope="col">Count</th></tr></thead>
+              <tbody id="metrics-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Sources ===== -->
+    <section class="section section-tinted" id="sources">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Sources and credits</h2>
+        </div>
+        <ol class="sources">
+          <li id="source-1">World Wide Web Consortium (W3C). “Web Content Accessibility Guidelines (WCAG) 2.2.” W3C Recommendation, 2023. https://www.w3.org/TR/WCAG22/</li>
+          <li id="source-2">WebAIM, Utah State University. “Contrast Checker.” https://webaim.org/resources/contrastchecker/</li>
+          <li id="source-3">Braille Institute of America. “Atkinson Hyperlegible Font.” https://www.brailleinstitute.org/freefont/</li>
+          <li id="source-4">Nielsen Norman Group. “F-Shaped Pattern of Reading on the Web: Misunderstood, But Still Relevant.” https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/</li>
+          <li id="source-5">Nielsen Norman Group. “10 Usability Heuristics for User Interface Design.” https://www.nngroup.com/articles/ten-usability-heuristics/</li>
+          <li id="source-6">Pew Research Center. “Mobile Fact Sheet.” https://www.pewresearch.org/internet/fact-sheet/mobile/</li>
+          <li id="source-7">988 Suicide &amp; Crisis Lifeline. https://988lifeline.org/</li>
+          <li id="source-8">211 (United Way Worldwide). https://www.211.org/</li>
+          <li id="source-9">MDN Web Docs. “&lt;dialog&gt;: The Dialog element.” https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog</li>
+          <li id="source-10">Google, web.dev. “Web Vitals.” https://web.dev/articles/vitals</li>
+          <li id="source-11">Google Chrome for Developers. “Introduction to Lighthouse.” https://developer.chrome.com/docs/lighthouse/overview</li>
+          <li id="source-12">MDN Web Docs. “Window: localStorage property.” https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage</li>
+        </ol>
+        <h3>Credits</h3>
+        <ul class="credits">
+          <li>Font: Atkinson Hyperlegible by the Braille Institute, used under the SIL Open Font License through Google Fonts.</li>
+          <li>Logo and illustrations: original artwork created for this project.</li>
+          <li>Icons: standard Unicode emoji, displayed by each device's own emoji font.</li>
+          <li>Riverbend is a fictional community. All organizations, addresses, phone numbers (555-01XX), and events are sample data created for demonstration. The 911, 988, and 211 numbers are real national services <a href="#source-7" class="cite">[7]</a> <a href="#source-8" class="cite">[8]</a>.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer (same on every page) ===== -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-logo">Riverbend <strong>Connect</strong></p>
+        <p>Connecting every neighbor with the resources they need.</p>
+      </div>
+      <nav aria-label="Footer">
+        <h2>Explore</h2>
+        <ul>
+          <li><a href="resources.html">Resource Directory</a></li>
+          <li><a href="events.html">Community Events</a></li>
+          <li><a href="saved.html">My Saved List</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="About this site">
+        <h2>About</h2>
+        <ul>
+          <li><a href="about.html">Our Mission</a></li>
+          <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+          <li><a href="contact.html">Contact &amp; Feedback</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> Riverbend Connect — an FBLA Website Design project.
+        <strong>Demo notice:</strong> Riverbend is a fictional community, and all listings and events are sample data.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/about.js"></script>
+</body>
+</html>

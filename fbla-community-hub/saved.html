@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your saved Riverbend community resources.">
+  <title>My Saved List | Riverbend Connect</title>
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ===== Help bar (same on every page) ===== -->
+  <div class="help-bar">
+    <p><strong>Need help now?</strong>
+      Emergency: <a href="tel:911">911</a> ·
+      Crisis line (call or text): <a href="tel:988">988</a> ·
+      Local services: <a href="tel:211">211</a></p>
+  </div>
+
+  <!-- ===== Header and navigation (same on every page) ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.svg" alt="" width="40" height="40">
+        <span>Riverbend <strong>Connect</strong></span>
+      </a>
+      <button id="menu-button" class="menu-button" aria-expanded="false" aria-controls="main-nav">
+        <span aria-hidden="true">☰</span> Menu
+      </button>
+      <nav id="main-nav" class="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="saved.html" aria-current="page">Saved <span id="saved-count" class="badge" hidden>0</span></a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button id="text-size-button" class="text-size-button" aria-pressed="false">
+          <span aria-hidden="true">A+</span> Larger text
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-header">
+      <div class="container">
+        <p class="eyebrow">My Saved List</p>
+        <h1>Your saved resources</h1>
+        <p>Your list is stored privately in this browser — no account needed. Print it to bring to an appointment.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div id="saved-tools" class="saved-tools" hidden>
+          <button id="print-button" class="button" type="button"><span aria-hidden="true">🖨️</span> Print my list</button>
+          <button id="clear-button" class="button button-outline" type="button">Clear all</button>
+        </div>
+
+        <div id="saved-list" class="card-grid"></div>
+
+        <div id="empty-saved" class="empty-state" hidden>
+          <p class="empty-icon" aria-hidden="true">♡</p>
+          <h2>You haven't saved anything yet</h2>
+          <p>Select the “Save” button on any resource to add it to this list.</p>
+          <a class="button" href="resources.html">Browse resources</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Resource details pop-up ===== -->
+  <dialog id="details-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-inner">
+      <button id="close-dialog" class="close-button" aria-label="Close details">✕</button>
+      <div id="dialog-content"></div>
+    </div>
+  </dialog>
+
+  <!-- ===== Footer (same on every page) ===== -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-logo">Riverbend <strong>Connect</strong></p>
+        <p>Connecting every neighbor with the resources they need.</p>
+      </div>
+      <nav aria-label="Footer">
+        <h2>Explore</h2>
+        <ul>
+          <li><a href="resources.html">Resource Directory</a></li>
+          <li><a href="events.html">Community Events</a></li>
+          <li><a href="saved.html">My Saved List</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="About this site">
+        <h2>About</h2>
+        <ul>
+          <li><a href="about.html">Our Mission</a></li>
+          <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+          <li><a href="contact.html">Contact &amp; Feedback</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> Riverbend Connect — an FBLA Website Design project.
+        <strong>Demo notice:</strong> Riverbend is a fictional community, and all listings and events are sample data.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/saved.js"></script>
+</body>
+</html>
