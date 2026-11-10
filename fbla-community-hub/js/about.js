@@ -39,6 +39,8 @@ document.getElementById("reset-metrics").addEventListener("click", function () {
 showMetrics();
 
 
+document.getElementById("source-count").textContent = resources.length;
+
 // Data sources: one row per listing, built from data.js so it can never drift
 document.getElementById("data-sources").innerHTML = resources
   .slice()

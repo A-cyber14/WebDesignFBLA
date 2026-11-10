@@ -7,17 +7,23 @@
    ========================================================= */
 
 function addBaseTiles(map) {
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
+  // If tiles are blocked, the pins still show on a plain background,
+  // and the Map page tells people the list has every location.
+  tiles.once("tileerror", function () {
+    const fallback = document.getElementById("map-fallback");
+    if (fallback && typeof onTilesFailed === "function") onTilesFailed();
+  });
 }
 
-// A teardrop pin in the category's color with its icon inside.
+// A round blue pin with the category icon inside.
 function pinIcon(category, count) {
   return L.divIcon({
     className: "",
-    html: `<div class="pin" style="--cat:${category.color}">${icon(category.icon)}${count > 1 ? `<span class="pin-count">${count}</span>` : ""}</div>`,
+    html: `<div class="pin">${icon(category.icon)}${count > 1 ? `<span class="pin-count">${count}</span>` : ""}</div>`,
     iconSize: [34, 34],
     iconAnchor: [17, 34]
   });

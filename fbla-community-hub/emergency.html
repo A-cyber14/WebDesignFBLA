@@ -3,249 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Official Pinellas County hurricane preparedness, evacuation zone, shelter, flood, and disaster recovery resources.">
-  <meta name="theme-color" content="#fbfaf7">
+  <meta name="description" content="Evacuation zones, shelters, and official emergency help for Pinellas County.">
+  <meta name="theme-color" content="#ffffff">
   <title>Hurricane & Emergency | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <!-- ===== Help bar (same on every page) ===== -->
-  <div class="help-bar">
-    <div class="container">
-      <p><strong>Need help now?</strong>
-        Emergency <a href="tel:911">911</a> ·
-        Crisis line (call or text) <a href="tel:988">988</a> ·
-        Local services <a href="tel:211">211</a></p>
-      <p><a class="help-storm" href="emergency.html">Hurricane &amp; evacuation info →</a></p>
-    </div>
-  </div>
-
-  <!-- ===== Header and navigation (same on every page) ===== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <img src="images/logo.svg" alt="" width="32" height="32">
-        <span>Pinellas <strong>Connect</strong></span>
-      </a>
-      <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
-        <span aria-hidden="true">☰</span> Menu
-      </button>
-      <nav id="main-nav" class="main-nav" aria-label="Main">
+      <a class="logo" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28">Pinellas Connect</a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="resources.html">Resources</a>
+        <a href="map.html">Map</a>
+        <a href="events.html">Events</a>
+        <a class="nav-emergency" href="emergency.html">Emergency</a>
+      </nav>
+      <div class="header-actions">
+        <a class="icon-button" href="saved.html"><span data-icon="heart"></span><span class="visually-hidden">Saved resources</span><span id="saved-count" class="count-badge" hidden>0</span></a>
+        <button id="menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span data-icon="menu"></span></button>
+      </div>
+    </div>
+    <div id="menu-panel" class="menu-panel" hidden>
+      <nav class="container" aria-label="Menu">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="resources.html">Resources</a></li>
-          <li><a href="map.html">Map</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a class="nav-emergency" href="emergency.html" aria-current="page"><span class="nav-dot" aria-hidden="true"></span>Hurricane &amp; Emergency</a></li>
-          <li><a href="saved.html">Saved <span id="saved-count" class="count-badge" hidden>0</span></a></li>
+          <li class="menu-primary"><a href="resources.html">Resources</a></li>
+          <li class="menu-primary"><a href="map.html">Map</a></li>
+          <li class="menu-primary"><a href="events.html">Events</a></li>
+          <li class="menu-primary"><a class="nav-emergency" href="emergency.html">Hurricane &amp; Emergency</a></li>
+          <li><a href="saved.html">Saved</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
-        <button id="text-size-button" class="text-size-button" type="button" aria-pressed="false">
-          <span aria-hidden="true">A+</span> Larger text
-        </button>
+        <div class="menu-footer">
+          <button id="text-size-button" class="button button-small button-secondary" type="button" aria-pressed="false">Larger text</button>
+        </div>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="storm-hero">
-      <div class="container">
-        <p class="eyebrow"><span data-icon="emergency"></span> Hurricane &amp; Emergency</p>
-        <h1>Be ready before the storm.</h1>
-        <p>Pinellas County is a peninsula, and storm surge and flooding are real risks. These official resources help you plan, evacuate, find shelter, and recover.</p>
+    <div class="container">
+      <div class="page-head">
+        <h1>Hurricane &amp; emergency</h1>
+        <p>Official help, first.</p>
+        <div class="call-row" style="margin-top:24px" aria-label="Emergency phone numbers">
+          <a class="call-pill is-911" href="tel:911"><strong>911</strong> Life-threatening emergency</a>
+          <a class="call-pill" href="tel:211"><strong>211</strong> Disaster help, 24/7</a>
+          <a class="call-pill" href="tel:988"><strong>988</strong> Crisis line, call or text</a>
+          <a class="call-pill" href="tel:7274644333"><strong>(727) 464-4333</strong> County Info Center, during emergencies</a>
+          <a class="call-pill" href="tel:7274643800"><strong>(727) 464-3800</strong> Emergency Management</a>
+        </div>
+      </div>
 
-        <ul class="call-grid" aria-label="Emergency phone numbers">
-          <li><a class="call-tile is-911" href="tel:911"><span class="call-number">911</span><span class="call-label">Life-threatening emergency: fire, police, or medical</span></a></li>
-          <li><a class="call-tile" href="tel:7274644333"><span class="call-number">464-4333</span><span class="call-label">County Information Center (727), active during emergencies</span></a></li>
-          <li><a class="call-tile" href="tel:211"><span class="call-number">211</span><span class="call-label">First Contact: disaster help and local services, 24/7</span></a></li>
-          <li><a class="call-tile" href="tel:7274643800"><span class="call-number">464-3800</span><span class="call-label">Pinellas County Emergency Management (727)</span></a></li>
-          <li><a class="call-tile" href="tel:988"><span class="call-number">988</span><span class="call-label">Suicide &amp; Crisis Lifeline, call or text 24/7</span></a></li>
-          <li><a class="call-tile" href="tel:7274643000"><span class="call-number">464-3000</span><span class="call-label">County Information Desk (727), Mon–Fri 8 a.m.–5 p.m.</span></a></li>
-        </ul>
+      <div class="notice">
+        <span data-icon="info"></span>
+        <p><strong>This site has no live alerts or shelter openings.</strong> Shelters open storm by storm. Follow Pinellas County Emergency Management and sign up for Alert Pinellas.</p>
+      </div>
+    </div>
+
+    <section class="section" aria-labelledby="actions-heading">
+      <div class="container">
+        <h2 id="actions-heading" style="margin-bottom:24px">Do these first</h2>
+        <div class="action-grid">
+          <a class="action-card" href="https://kyz.pinellascounty.org" target="_blank" rel="noopener">
+            <span data-icon="pin"></span><strong>Find your evacuation zone</strong>
+            <span>Look up your zone by address. Shows open shelters during storms.<span class="visually-hidden"> (opens in a new tab)</span></span>
+          </a>
+          <a class="action-card" href="https://pinellas.gov/emergency-information/public-shelters/" target="_blank" rel="noopener">
+            <span data-icon="housing"></span><strong>Shelter information</strong>
+            <span>General, pet-friendly, and special needs shelters.<span class="visually-hidden"> (opens in a new tab)</span></span>
+          </a>
+          <a class="action-card" href="https://pinellas.gov/hurricane-guide/" target="_blank" rel="noopener">
+            <span data-icon="check"></span><strong>Prepare for hurricanes</strong>
+            <span>The county's official guide. Also in Spanish and Vietnamese.<span class="visually-hidden"> (opens in a new tab)</span></span>
+          </a>
+          <a class="action-card" href="https://pinellas.gov/alert-pinellas/" target="_blank" rel="noopener">
+            <span data-icon="phone"></span><strong>Get Alert Pinellas</strong>
+            <span>Free county alerts by phone, text, or email.<span class="visually-hidden"> (opens in a new tab)</span></span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="section" style="padding-top:2rem">
+    <section class="section section-gray" aria-labelledby="links-heading">
       <div class="container">
-        <div class="notice">
-          <span data-icon="info"></span>
-          <p><strong>This page does not show live storm conditions, shelter openings, or emergency alerts.</strong> Shelters open based on each storm, so never assume one you used before will be open. Always follow Pinellas County Emergency Management, the National Weather Service, and local officials, and sign up for Alert Pinellas.</p>
-        </div>
-
-        <div class="phase">
-          <div class="phase-head"><span class="phase-step" aria-hidden="true">1</span><h2>Before: plan &amp; prepare</h2></div>
-          <ul class="link-grid">
-            <li><a class="link-tile" href="https://kyz.pinellascounty.org" target="_blank" rel="noopener">
-              <strong>Know Your Zone <span data-icon="external"></span></strong>
-              <span>Look up your evacuation zone by address. During a storm, this site also maps open shelters.</span>
-              <span class="link-source">Pinellas County<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/hurricane-guide/" target="_blank" rel="noopener">
-              <strong>Hurricane Guide <span data-icon="external"></span></strong>
-              <span>The county's official guide to making a plan. Also available in Spanish and Vietnamese.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/special-needs/" target="_blank" rel="noopener">
-              <strong>Special Needs Evacuation Program <span data-icon="external"></span></strong>
-              <span>Register in advance if you need transportation or a special needs shelter to evacuate.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/alert-pinellas/" target="_blank" rel="noopener">
-              <strong>Sign up for Alert Pinellas <span data-icon="external"></span></strong>
-              <span>Free emergency notifications from the county by phone, text, or email.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/make-a-plan/build-your-emergency-kit" target="_blank" rel="noopener">
-              <strong>Build your emergency kit <span data-icon="external"></span></strong>
-              <span>Checklist of supplies to have ready for you, your family, and your pets.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/make-a-plan" target="_blank" rel="noopener">
-              <strong>Make a plan <span data-icon="external"></span></strong>
-              <span>Decide where you'll go, including options for pets and family members.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <div class="phase-head"><span class="phase-step" aria-hidden="true">2</span><h2>Flooding &amp; storm surge</h2></div>
-          <ul class="link-grid">
-            <li><a class="link-tile" href="https://pinellas.gov/flood-information/" target="_blank" rel="noopener">
-              <strong>Flood information <span data-icon="external"></span></strong>
-              <span>Flood risk, flood zones, and how to protect your home.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/storm-surge/" target="_blank" rel="noopener">
-              <strong>Storm surge <span data-icon="external"></span></strong>
-              <span>Why storm surge, not wind, is the greatest threat in a coastal county.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/evacuation-zone/" target="_blank" rel="noopener">
-              <strong>Find your evacuation zone <span data-icon="external"></span></strong>
-              <span>Evacuation zones are based on storm surge risk, not flood zones.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <div class="phase-head"><span class="phase-step" aria-hidden="true">3</span><h2>During: evacuate &amp; shelter</h2></div>
-          <ul class="link-grid">
-            <li><a class="link-tile" href="https://pinellas.gov/emergency-information/public-shelters/" target="_blank" rel="noopener">
-              <strong>Emergency shelters <span data-icon="external"></span></strong>
-              <span>Shelter types (general, pet-friendly, special needs) and status updates when evacuations are ordered.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">
-              <strong>National Hurricane Center <span data-icon="external"></span></strong>
-              <span>Official forecasts, cones, and advisories for active storms.</span>
-              <span class="link-source">nhc.noaa.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://www.weather.gov/tbw/" target="_blank" rel="noopener">
-              <strong>NWS Tampa Bay <span data-icon="external"></span></strong>
-              <span>Local watches, warnings, and forecasts from the National Weather Service.</span>
-              <span class="link-source">weather.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <div class="phase-head"><span class="phase-step" aria-hidden="true">4</span><h2>After: recover</h2></div>
-          <ul class="link-grid">
-            <li><a class="link-tile" href="https://recover.pinellas.gov" target="_blank" rel="noopener">
-              <strong>Pinellas hurricane recovery <span data-icon="external"></span></strong>
-              <span>The county's recovery hub for permits, debris, and rebuilding information.</span>
-              <span class="link-source">recover.pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://pinellas.gov/services/apply-for-hurricane-recovery-funds/" target="_blank" rel="noopener">
-              <strong>Apply for hurricane recovery funds <span data-icon="external"></span></strong>
-              <span>County assistance programs for residents affected by past hurricanes.</span>
-              <span class="link-source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-            <li><a class="link-tile" href="https://www.disasterassistance.gov/" target="_blank" rel="noopener">
-              <strong>FEMA Disaster Assistance <span data-icon="external"></span></strong>
-              <span>Apply for federal assistance after a declared disaster.</span>
-              <span class="link-source">disasterassistance.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
-            </a></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <div class="section-heading" style="margin-bottom:1rem">
-            <h2>Emergency &amp; disaster organizations</h2>
-            <p>Verified listings from our directory.</p>
+        <h2 id="links-heading" style="margin-bottom:32px">More official links</h2>
+        <div class="link-columns">
+          <div>
+            <h3>Before</h3>
+            <ul>
+              <li><a href="https://pinellas.gov/special-needs/" target="_blank" rel="noopener">Special Needs Evacuation Program</a></li>
+              <li><a href="https://pinellas.gov/make-a-plan/build-your-emergency-kit" target="_blank" rel="noopener">Build an emergency kit</a></li>
+              <li><a href="https://pinellas.gov/make-a-plan" target="_blank" rel="noopener">Make a plan</a></li>
+            </ul>
           </div>
-          <div id="emergency-list" class="card-grid"></div>
+          <div>
+            <h3>Flooding</h3>
+            <ul>
+              <li><a href="https://pinellas.gov/flood-information/" target="_blank" rel="noopener">Flood information</a></li>
+              <li><a href="https://pinellas.gov/storm-surge/" target="_blank" rel="noopener">Storm surge</a></li>
+              <li><a href="https://pinellas.gov/evacuation-zone/" target="_blank" rel="noopener">How evacuation zones work</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>During</h3>
+            <ul>
+              <li><a href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">National Hurricane Center</a></li>
+              <li><a href="https://www.weather.gov/tbw/" target="_blank" rel="noopener">NWS Tampa Bay</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>After</h3>
+            <ul>
+              <li><a href="https://recover.pinellas.gov" target="_blank" rel="noopener">Pinellas hurricane recovery</a></li>
+              <li><a href="https://pinellas.gov/services/apply-for-hurricane-recovery-funds/" target="_blank" rel="noopener">Hurricane recovery funds</a></li>
+              <li><a href="https://www.disasterassistance.gov/" target="_blank" rel="noopener">FEMA Disaster Assistance</a></li>
+            </ul>
+          </div>
         </div>
+        <p class="visually-hidden">Links open in a new tab.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="orgs-heading">
+      <div class="container">
+        <h2 id="orgs-heading" style="margin-bottom:24px">Emergency organizations</h2>
+        <div id="emergency-list" class="grid"></div>
       </div>
     </section>
   </main>
 
   <dialog id="details-dialog" aria-labelledby="dialog-title">
     <div class="dialog-inner">
-      <button id="close-dialog" class="close-button" type="button" aria-label="Close details">✕</button>
+      <button id="close-dialog" class="icon-button close-button" type="button" aria-label="Close details"><span data-icon="close"></span></button>
       <div id="dialog-content"></div>
     </div>
   </dialog>
 
-  <!-- ===== Footer (same on every page) ===== -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
+      <div class="footer-inner">
         <div>
-          <p class="footer-logo">Pinellas <strong>Connect</strong></p>
-          <p>Trusted local services, programs, and support across Pinellas County, Florida, verified against official sources.</p>
+          <p class="footer-logo">Pinellas Connect</p>
+          <p>Local help across Pinellas County, Florida.</p>
         </div>
-        <nav aria-label="Find help">
-          <h2>Find help</h2>
-          <ul>
-            <li><a href="resources.html">Resource Directory</a></li>
-            <li><a href="map.html">Resource Map</a></li>
-            <li><a href="events.html">Community Events</a></li>
-            <li><a href="emergency.html">Hurricane &amp; Emergency</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Your list">
-          <h2>Your list</h2>
-          <ul>
-            <li><a href="saved.html">Saved Resources</a></li>
-            <li><a href="contact.html">Suggest a Resource</a></li>
-            <li><a href="contact.html">Report Outdated Info</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="About this site">
-          <h2>About</h2>
-          <ul>
-            <li><a href="about.html">Our Mission</a></li>
-            <li><a href="about.html#verification">How We Verify</a></li>
-            <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+        <nav aria-label="Footer">
+          <ul class="footer-links">
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="emergency.html">Emergency</a></li>
+            <li><a href="saved.html">Saved</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="about.html#sources">Sources</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </nav>
       </div>
       <div class="footer-bottom">
-        <p><strong>Please confirm before you go.</strong> Listings were checked against official sources on the date shown on each one, but hours and services change. Contact the organization directly to confirm. In an emergency, call 911.</p>
-        <p>© <span class="js-year">2026</span> Pinellas Connect, an independent student project for the FBLA Website Design event. Not affiliated with Pinellas County Government or any organization listed.</p>
+        <p>In an emergency, call <a href="tel:911">911</a>. Services change, so confirm before you go.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</p>
       </div>
     </div>
   </footer>
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
-  
-  <script>
-    // Show the directory's emergency listings on this page
-    document.getElementById("emergency-list").innerHTML = resources
-      .filter(function (r) { return r.categories.includes("emergency"); })
-      .map(createResourceCard).join("");
-  </script>
+  <script src="js/emergency.js"></script>
 </body>
 </html>

@@ -3,175 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Suggest a Pinellas County resource or report outdated information.">
-  <meta name="theme-color" content="#fbfaf7">
+  <meta name="description" content="Suggest a resource or report outdated information.">
+  <meta name="theme-color" content="#ffffff">
   <title>Contact | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <!-- ===== Help bar (same on every page) ===== -->
-  <div class="help-bar">
-    <div class="container">
-      <p><strong>Need help now?</strong>
-        Emergency <a href="tel:911">911</a> ·
-        Crisis line (call or text) <a href="tel:988">988</a> ·
-        Local services <a href="tel:211">211</a></p>
-      <p><a class="help-storm" href="emergency.html">Hurricane &amp; evacuation info →</a></p>
-    </div>
-  </div>
-
-  <!-- ===== Header and navigation (same on every page) ===== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <img src="images/logo.svg" alt="" width="32" height="32">
-        <span>Pinellas <strong>Connect</strong></span>
-      </a>
-      <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
-        <span aria-hidden="true">☰</span> Menu
-      </button>
-      <nav id="main-nav" class="main-nav" aria-label="Main">
+      <a class="logo" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28">Pinellas Connect</a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="resources.html">Resources</a>
+        <a href="map.html">Map</a>
+        <a href="events.html">Events</a>
+        <a class="nav-emergency" href="emergency.html">Emergency</a>
+      </nav>
+      <div class="header-actions">
+        <a class="icon-button" href="saved.html"><span data-icon="heart"></span><span class="visually-hidden">Saved resources</span><span id="saved-count" class="count-badge" hidden>0</span></a>
+        <button id="menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span data-icon="menu"></span></button>
+      </div>
+    </div>
+    <div id="menu-panel" class="menu-panel" hidden>
+      <nav class="container" aria-label="Menu">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="resources.html">Resources</a></li>
-          <li><a href="map.html">Map</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a class="nav-emergency" href="emergency.html"><span class="nav-dot" aria-hidden="true"></span>Hurricane &amp; Emergency</a></li>
-          <li><a href="saved.html">Saved <span id="saved-count" class="count-badge" hidden>0</span></a></li>
+          <li class="menu-primary"><a href="resources.html">Resources</a></li>
+          <li class="menu-primary"><a href="map.html">Map</a></li>
+          <li class="menu-primary"><a href="events.html">Events</a></li>
+          <li class="menu-primary"><a class="nav-emergency" href="emergency.html">Hurricane &amp; Emergency</a></li>
+          <li><a href="saved.html">Saved</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="contact.html" aria-current="page">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
-        <button id="text-size-button" class="text-size-button" type="button" aria-pressed="false">
-          <span aria-hidden="true">A+</span> Larger text
-        </button>
+        <div class="menu-footer">
+          <button id="text-size-button" class="button button-small button-secondary" type="button" aria-pressed="false">Larger text</button>
+        </div>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="page-header">
-      <div class="container">
-        <p class="eyebrow">Contact &amp; Feedback</p>
-        <h1>Help us keep Pinellas Connect accurate.</h1>
-        <p>Suggest a new resource, report outdated information, or tell us how we can improve.</p>
+    <div class="container">
+      <div class="page-head">
+        <h1>Help us improve</h1>
+        <p>Suggest a resource or report outdated info.</p>
       </div>
-    </section>
 
-    <section class="section" style="padding-top:1rem">
-      <div class="container contact-layout">
-        <div class="form-card">
+      <div class="contact-layout">
+        <div>
           <form id="contact-form" novalidate>
-            <p class="form-note">All fields are required.</p>
-
+            <p class="form-note">All fields required. This student prototype has no server yet, so messages are not sent.</p>
             <div class="field">
-              <label for="name">Your name</label>
+              <label for="name">Name</label>
               <input id="name" type="text" autocomplete="name" aria-describedby="name-error">
               <p id="name-error" class="error" aria-live="polite"></p>
             </div>
-
             <div class="field">
-              <label for="email">Email address</label>
+              <label for="email">Email</label>
               <input id="email" type="email" autocomplete="email" aria-describedby="email-error">
               <p id="email-error" class="error" aria-live="polite"></p>
             </div>
-
             <div class="field">
               <label for="topic">Topic</label>
               <select id="topic" aria-describedby="topic-error">
                 <option value="">Choose a topic</option>
-                <option value="suggest">Suggest a new resource</option>
-                <option value="update">Report outdated or incorrect information</option>
+                <option value="suggest">Suggest a resource</option>
+                <option value="update">Report outdated info</option>
                 <option value="event">Suggest an event</option>
                 <option value="feedback">Website feedback</option>
               </select>
               <p id="topic-error" class="error" aria-live="polite"></p>
             </div>
-
             <div class="field">
               <label for="message">Message</label>
-              <textarea id="message" rows="5" aria-describedby="message-error" placeholder="Include the organization's name and its official website if you can."></textarea>
+              <textarea id="message" rows="5" aria-describedby="message-error" placeholder="Include the organization's name and website if you can."></textarea>
               <p id="message-error" class="error" aria-live="polite"></p>
             </div>
-
-            <button class="button" type="submit">Send message</button>
+            <button class="button" type="submit">Check &amp; submit</button>
           </form>
 
           <div id="form-success" class="success-box" tabindex="-1" hidden>
-            <span class="empty-icon"><span data-icon="check"></span></span>
-            <h2>Thank you, <span id="success-name"></span>!</h2>
-            <p>We verify every suggestion against official sources before adding it to the directory.</p>
-            <p class="note">Prototype note: this student project has no server, so messages are not actually sent.</p>
-            <button id="send-another" class="button button-quiet" type="button">Send another message</button>
+            <h2>Thanks, <span id="success-name"></span>.</h2>
+            <p>Your message looks good. Because this prototype has no server, it was not sent. For urgent corrections, contact the organization directly.</p>
+            <button id="send-another" class="button button-secondary" type="button">Start over</button>
           </div>
         </div>
 
-        <aside class="info-card" aria-labelledby="other-ways">
-          <h2 id="other-ways">Looking for help, not feedback?</h2>
-          <p>Pinellas Connect is a directory, not a service provider. These official lines can help directly:</p>
-          <dl class="details-list">
-            <dt>Local services</dt> <dd><a href="tel:211">211</a>, or text your ZIP code to <a href="sms:898211">898211</a> (First Contact, 24/7)</dd>
-            <dt>County questions</dt> <dd><a href="tel:7274643000">(727) 464-3000</a>, County Information Desk, Mon–Fri 8 a.m.–5 p.m.</dd>
-          </dl>
-          <div class="urgent-box">
-            <h3>Need help right now?</h3>
-            <p>For emergencies, call <a href="tel:911">911</a>. For mental health support, call or text <a href="tel:988">988</a>.</p>
-          </div>
+        <aside class="side-info" aria-labelledby="help-heading">
+          <h2 id="help-heading">Need help, not feedback?</h2>
+          <ul>
+            <li><a href="tel:211">211</a> or text your ZIP to <a href="sms:898211">898211</a>: local services, 24/7</li>
+            <li><a href="tel:7274643000">(727) 464-3000</a>: County Information Desk, Mon–Fri 8–5</li>
+            <li><a href="tel:988">988</a>: crisis line, call or text</li>
+            <li><a href="tel:911">911</a>: emergencies</li>
+          </ul>
         </aside>
       </div>
-    </section>
+    </div>
   </main>
 
-  <!-- ===== Footer (same on every page) ===== -->
+  <dialog id="details-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-inner">
+      <button id="close-dialog" class="icon-button close-button" type="button" aria-label="Close details"><span data-icon="close"></span></button>
+      <div id="dialog-content"></div>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
+      <div class="footer-inner">
         <div>
-          <p class="footer-logo">Pinellas <strong>Connect</strong></p>
-          <p>Trusted local services, programs, and support across Pinellas County, Florida, verified against official sources.</p>
+          <p class="footer-logo">Pinellas Connect</p>
+          <p>Local help across Pinellas County, Florida.</p>
         </div>
-        <nav aria-label="Find help">
-          <h2>Find help</h2>
-          <ul>
-            <li><a href="resources.html">Resource Directory</a></li>
-            <li><a href="map.html">Resource Map</a></li>
-            <li><a href="events.html">Community Events</a></li>
-            <li><a href="emergency.html">Hurricane &amp; Emergency</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Your list">
-          <h2>Your list</h2>
-          <ul>
-            <li><a href="saved.html">Saved Resources</a></li>
-            <li><a href="contact.html">Suggest a Resource</a></li>
-            <li><a href="contact.html">Report Outdated Info</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="About this site">
-          <h2>About</h2>
-          <ul>
-            <li><a href="about.html">Our Mission</a></li>
-            <li><a href="about.html#verification">How We Verify</a></li>
-            <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+        <nav aria-label="Footer">
+          <ul class="footer-links">
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="emergency.html">Emergency</a></li>
+            <li><a href="saved.html">Saved</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="about.html#sources">Sources</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </nav>
       </div>
       <div class="footer-bottom">
-        <p><strong>Please confirm before you go.</strong> Listings were checked against official sources on the date shown on each one, but hours and services change. Contact the organization directly to confirm. In an emergency, call 911.</p>
-        <p>© <span class="js-year">2026</span> Pinellas Connect, an independent student project for the FBLA Website Design event. Not affiliated with Pinellas County Government or any organization listed.</p>
+        <p>In an emergency, call <a href="tel:911">911</a>. Services change, so confirm before you go.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</p>
       </div>
     </div>
   </footer>
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
-  
   <script src="js/contact.js"></script>
 </body>
 </html>

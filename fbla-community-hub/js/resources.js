@@ -1,37 +1,36 @@
 /* =========================================================
-   resources.js — Search and filters for the Resource Directory.
-   Search, category, location, and cost filters all work together.
+   resources.js: search and filters for the Resource Directory.
+   Search, category, city, and the checkboxes all work together.
    ========================================================= */
 
 const searchInput = document.getElementById("search");
 const citySelect = document.getElementById("city");
 const freeCheckbox = document.getElementById("free-only");
+const countywideCheckbox = document.getElementById("countywide-only");
+const urgentCheckbox = document.getElementById("urgent-only");
 const sortSelect = document.getElementById("sort");
-const categoryButtonsBox = document.getElementById("category-buttons");
+const categoryBox = document.getElementById("category-options");
 const resultsList = document.getElementById("results");
 const resultsCount = document.getElementById("results-count");
 const resultsNote = document.getElementById("results-note");
 const noResults = document.getElementById("no-results");
+const filterToggle = document.getElementById("filter-toggle");
+const filtersPanel = document.getElementById("filters");
 
-let selectedCategory = "all";
 
+/* ---------- Category radio buttons ---------- */
+categoryBox.innerHTML =
+  `<label><input type="radio" name="category" value="all" checked> All</label>` +
+  categories.map(function (c) {
+    return `<label><input type="radio" name="category" value="${c.id}"> ${icon(c.icon)} ${c.short}</label>`;
+  }).join("");
 
-/* ---------- Category filter buttons ---------- */
-function createCategoryButtons() {
-  let html = `<button class="chip" type="button" data-category="all" aria-pressed="true">All</button>`;
-  categories.forEach(function (category) {
-    html += `<button class="chip" type="button" data-category="${category.id}" aria-pressed="false" style="--cat:${category.color}">
-               ${icon(category.icon)} ${category.name}
-             </button>`;
-  });
-  categoryButtonsBox.innerHTML = html;
+function selectedCategory() {
+  return categoryBox.querySelector("input:checked").value;
 }
 
-function selectCategory(categoryId) {
-  selectedCategory = categoryId;
-  categoryButtonsBox.querySelectorAll(".chip").forEach(function (button) {
-    button.setAttribute("aria-pressed", button.dataset.category === categoryId);
-  });
+function selectCategory(id) {
+  categoryBox.querySelector(`input[value="${id}"]`).checked = true;
 }
 
 
@@ -39,6 +38,7 @@ function selectCategory(categoryId) {
 function showResults() {
   const searchText = searchInput.value.trim().toLowerCase();
   const city = citySelect.value;
+  const category = selectedCategory();
 
   const matches = resources.filter(function (resource) {
     const categoryNames = resource.categories.map(function (id) { return getCategory(id).name; }).join(" ");
@@ -46,29 +46,27 @@ function showResults() {
     const textToSearch = (resource.name + " " + resource.description + " " + categoryNames + " " + places + " " + (resource.areaNote || "")).toLowerCase();
 
     return textToSearch.includes(searchText) &&
-           (selectedCategory === "all" || resource.categories.includes(selectedCategory)) &&
+           (category === "all" || resource.categories.includes(category)) &&
            servesCity(resource, city) &&
-           (!freeCheckbox.checked || resource.free);
+           (!freeCheckbox.checked || resource.free) &&
+           (!countywideCheckbox.checked || resource.area === "countywide") &&
+           (!urgentCheckbox.checked || resource.urgent);
   });
 
+  matches.sort(function (a, b) { return a.name.localeCompare(b.name); });
   if (sortSelect.value === "urgent") {
-    // Crisis lines first, then A–Z
-    matches.sort(function (a, b) { return (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0) || a.name.localeCompare(b.name); });
-  } else {
-    matches.sort(function (a, b) { return a.name.localeCompare(b.name); });
-    if (sortSelect.value === "za") matches.reverse();
+    matches.sort(function (a, b) { return (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0); });
   }
 
   resultsList.innerHTML = matches.map(createResourceCard).join("");
-
-  resultsCount.textContent = `Showing ${matches.length} of ${resources.length} resources` + (city !== "all" ? ` available in ${city}` : "");
-  resultsNote.textContent = city !== "all" ? "Includes services for all of Pinellas County, plus places located in " + city + "." : "";
+  resultsCount.textContent = `${matches.length} ${matches.length === 1 ? "resource" : "resources"}`;
+  resultsNote.textContent = city !== "all" ? "Includes countywide services plus places in " + city + "." : "";
   noResults.hidden = matches.length > 0;
 
   // Keep the address bar in sync so results can be shared or bookmarked
   const params = new URLSearchParams();
   if (searchInput.value.trim()) params.set("search", searchInput.value.trim());
-  if (selectedCategory !== "all") params.set("category", selectedCategory);
+  if (category !== "all") params.set("category", category);
   if (city !== "all") params.set("city", city);
   const query = params.toString();
   try {
@@ -79,18 +77,12 @@ function showResults() {
 }
 
 function resetFilters() {
-  searchInput.value = "";
-  citySelect.value = "all";
-  freeCheckbox.checked = false;
-  sortSelect.value = "az";
-  selectCategory("all");
+  document.getElementById("filter-form").reset();
   showResults();
 }
 
 
 /* ---------- Connect the controls ---------- */
-createCategoryButtons();
-
 searchInput.addEventListener("input", showResults);
 searchInput.addEventListener("change", function () {
   if (searchInput.value.trim() === "") return;
@@ -102,16 +94,17 @@ document.getElementById("filter-form").addEventListener("submit", function (even
   event.preventDefault();
 });
 
-citySelect.addEventListener("change", function () { trackEvent("filtersUsed"); showResults(); });
-freeCheckbox.addEventListener("change", function () { trackEvent("filtersUsed"); showResults(); });
-sortSelect.addEventListener("change", showResults);
-
-categoryButtonsBox.addEventListener("click", function (event) {
-  const button = event.target.closest(".chip");
-  if (!button) return;
-  selectCategory(button.dataset.category);
+// Any filter change (radios, select, checkboxes) refreshes the results
+filtersPanel.addEventListener("change", function () {
   trackEvent("filtersUsed");
   showResults();
+});
+sortSelect.addEventListener("change", showResults);
+
+// Phones and tablets: show or hide the filter panel
+filterToggle.addEventListener("click", function () {
+  const open = filtersPanel.classList.toggle("is-open");
+  filterToggle.setAttribute("aria-expanded", open);
 });
 
 document.getElementById("reset-button").addEventListener("click", resetFilters);

@@ -61,14 +61,14 @@ function showPreview(group) {
     const phone = item.location.phone || r.phones[0].number;
     return `
       <div class="preview-item">
-        <span class="tag" style="background:color-mix(in srgb, ${category.color} 14%, white)">${category.name}</span>
+        <span class="badge">${category.short}</span>
         <h3>${r.name}</h3>
         <p><strong>${item.location.label}</strong><br>${item.location.address}</p>
-        <p>${icon("clock")} ${item.location.hours || r.hours}</p>
+        <p>${item.location.hours || r.hours}</p>
         <div class="preview-actions">
-          <a class="button button-small" href="${directionsURL(item.location.address)}" target="_blank" rel="noopener">${icon("directions")} Directions<span class="visually-hidden"> to ${r.name} (opens in a new tab)</span></a>
-          <a class="button button-small button-quiet" href="${telHref(phone)}">${icon("phone")} Call</a>
-          <button class="button button-small button-quiet details-button" type="button" data-id="${r.id}">Details</button>
+          <a class="button button-small" href="${directionsURL(item.location.address)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${r.name} (opens in a new tab)</span></a>
+          <a class="button button-small button-secondary" href="${telHref(phone)}">Call</a>
+          <button class="button button-small button-secondary details-button" type="button" data-id="${r.id}">Details</button>
         </div>
       </div>`;
   }).join("");
@@ -100,11 +100,11 @@ function render() {
     const r = item.resource;
     const category = getCategory(r.categories[0]);
     return `
-      <li class="map-list-item" data-key="${placeKey(item.location)}" style="--cat:${category.color}">
-        <span class="cat-icon">${icon(category.icon)}</span>
+      <li class="map-list-item" data-key="${placeKey(item.location)}">
         <div>
+          <p>${category.short}</p>
           <h3>${r.name}</h3>
-          <p>${item.location.label} · ${item.location.address}</p>
+          <p>${item.location.address}</p>
           <div class="map-list-actions">
             ${mapReady ? `<button type="button" data-show="${placeKey(item.location)}">Show on map<span class="visually-hidden">: ${r.name}</span></button>` : ""}
             <a href="${directionsURL(item.location.address)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${r.name} (opens in a new tab)</span></a>
@@ -112,10 +112,9 @@ function render() {
           </div>
         </div>
       </li>`;
-  }).join("") || `<li class="empty-state"><p>No mapped locations match these filters.</p></li>`;
+  }).join("") || `<li class="empty-state"><p>No mapped places match.</p></li>`;
 
-  const placeWord = groups.length === 1 ? "place" : "places";
-  mapCount.textContent = `${items.length} ${items.length === 1 ? "location" : "locations"} at ${groups.length} ${placeWord}${city !== "all" ? " in " + city : ""}`;
+  mapCount.textContent = `${items.length} ${items.length === 1 ? "location" : "locations"}`;
 
   // Services with no walk-in location still serve residents
   const categoryId = mapCategory.value;
@@ -126,7 +125,7 @@ function render() {
   const cityParam = city !== "all" ? "&city=" + encodeURIComponent(city) : "";
   const catParam = categoryId !== "all" ? "category=" + categoryId : "";
   mapExtra.innerHTML = remote
-    ? `Plus ${remote} countywide ${remote === 1 ? "service" : "services"} available by phone or online. <a href="resources.html?${catParam}${cityParam}">See the full list</a>.`
+    ? `+ ${remote} countywide ${remote === 1 ? "service" : "services"} by phone or online. <a href="resources.html?${catParam}${cityParam}">See all</a>`
     : "";
 
   // Pins
@@ -153,6 +152,14 @@ function render() {
   if (groups.length) {
     map.fitBounds(markerLayer.getBounds(), { padding: [50, 50], maxZoom: 15 });
   }
+}
+
+
+// Called by maptools.js if map tiles can't load: show the notice
+// and switch to the list, which has every location.
+function onTilesFailed() {
+  document.getElementById("map-fallback").hidden = false;
+  document.querySelector('[data-view-button="list"]').click();
 }
 
 

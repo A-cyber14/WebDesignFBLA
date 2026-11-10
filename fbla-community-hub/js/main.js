@@ -55,6 +55,8 @@ const ICONS = {
   calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   directions: '<path d="M12 2.8 21.2 12 12 21.2 2.8 12Z"/><path d="M9.5 14v-2.5h4.5M12 9l2.2 2.5L12 14"/>',
   info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.2"/>',
+  menu: '<path d="M4 8h16M4 16h16"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
   external: '<path d="M14 4h6v6M20 4l-8.5 8.5M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/>'
 };
 
@@ -95,24 +97,28 @@ function directionsURL(address) {
 }
 
 
-/* ---------- 4. Mobile menu and larger text ---------- */
+/* ---------- 4. Menu, current page, and larger text ---------- */
 function setupMenu() {
-  const menuButton = document.getElementById("menu-button");
-  const nav = document.getElementById("main-nav");
-  if (!menuButton) return;
+  const button = document.getElementById("menu-button");
+  const panel = document.getElementById("menu-panel");
+  if (!button) return;
 
-  menuButton.addEventListener("click", function () {
-    const isOpen = nav.classList.toggle("open");
-    menuButton.setAttribute("aria-expanded", isOpen);
-  });
-
-  // Escape closes the open menu
+  function setOpen(open) {
+    panel.hidden = !open;
+    button.setAttribute("aria-expanded", open);
+    button.innerHTML = icon(open ? "close" : "menu");
+  }
+  button.addEventListener("click", function () { setOpen(panel.hidden); });
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && nav.classList.contains("open")) {
-      nav.classList.remove("open");
-      menuButton.setAttribute("aria-expanded", "false");
-      menuButton.focus();
-    }
+    if (event.key === "Escape" && !panel.hidden) { setOpen(false); button.focus(); }
+  });
+}
+
+// Marks the link to the current page in the header and menu
+function markCurrentPage() {
+  const page = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".site-header a").forEach(function (link) {
+    if (link.getAttribute("href") === page && !link.classList.contains("logo")) link.setAttribute("aria-current", "page");
   });
 }
 
@@ -219,46 +225,36 @@ function upcomingEvents() {
 
 
 /* ---------- 8. Shared pieces of HTML ---------- */
-function areaBadge(resource) {
-  if (resource.area === "countywide") {
-    return `<span class="badge-area badge-countywide">${icon("globe")} Serves all of Pinellas</span>`;
-  }
+// Short "where" text for a card: all of Pinellas, or the cities it is in
+function areaText(resource) {
+  if (resource.area === "countywide") return "All of Pinellas";
   const cityNames = resource.locations.map(function (l) { return l.city; })
     .filter(function (c, i, all) { return all.indexOf(c) === i; });
-  const where = cityNames.length ? "In " + cityNames.join(", ") : "Area not listed";
-  return `<span class="badge-area badge-local">${icon("pin")} ${where} · call to confirm area</span>`;
+  return cityNames.length ? cityNames.join(", ") : "Call to confirm area";
+}
+
+function saveButton(resource) {
+  const saved = isFavorite(resource.id);
+  return `<button class="save-button" type="button" data-id="${resource.id}" aria-pressed="${saved}" aria-label="Save ${resource.name}">${icon("heart")}</button>`;
 }
 
 function createResourceCard(resource) {
   const category = getCategory(resource.categories[0]);
-  const saved = isFavorite(resource.id);
-  const phone = resource.phones[0];
-
   return `
-    <article class="resource-card${resource.urgent ? " is-urgent" : ""}" style="--cat:${category.color}">
+    <article class="card">
       <div class="card-top">
-        <span class="cat-icon">${icon(category.icon)}</span>
-        <span class="card-category">${category.name}</span>
-        ${resource.urgent ? '<span class="badge-urgent">24/7 crisis line</span>' : ""}
+        <span class="card-cat">${icon(category.icon)} ${category.short}</span>
+        ${saveButton(resource)}
       </div>
       <h3>${resource.name}</h3>
+      <p class="card-place">${icon("pin")} ${areaText(resource)}</p>
       <p class="card-text">${resource.description}</p>
-      <ul class="card-meta">
-        <li>${areaBadge(resource)}</li>
-        <li>${icon("clock")} <span>${resource.hours}</span></li>
-        ${phone ? `<li>${icon("phone")} <a href="${phone.sms ? "sms:" + phone.number : telHref(phone.number)}">${phone.number}</a> <span class="muted">${phone.label}</span></li>` : ""}
-      </ul>
-      <p class="print-only">${resource.locations.map(function (l) { return l.address; }).join(" · ")} ${resource.website}</p>
-      <div class="card-footer">
-        <span class="verified">${icon("check")} Verified ${formatVerified(resource.verified)}</span>
-        <div class="card-buttons">
-          <button class="button button-small details-button" type="button" data-id="${resource.id}">
-            Details<span class="visually-hidden"> for ${resource.name}</span>
-          </button>
-          <button class="save-button" type="button" data-id="${resource.id}" aria-pressed="${saved}">
-            ${icon("heart")}<span class="save-label">${saved ? "Saved" : "Save"}</span><span class="visually-hidden"> ${resource.name}</span>
-          </button>
-        </div>
+      <p class="print-only">${resource.phones.map(function (p) { return p.number; }).join(" · ")} · ${resource.locations.map(function (l) { return l.address; }).join(" · ")} · ${resource.website}</p>
+      <div class="card-foot">
+        <button class="text-button details-button" type="button" data-id="${resource.id}">
+          Details<span class="visually-hidden"> for ${resource.name}</span> ${icon("arrow")}
+        </button>
+        ${resource.urgent ? '<span class="badge badge-urgent">24/7</span>' : ""}
       </div>
     </article>`;
 }
@@ -270,7 +266,7 @@ function eventDateParts(event) {
   return {
     month: start.toLocaleDateString("en-US", Object.assign({ month: "short" }, zone)),
     day: start.toLocaleDateString("en-US", Object.assign({ day: "numeric" }, zone)),
-    full: start.toLocaleDateString("en-US", Object.assign({ weekday: "long", month: "long", day: "numeric", year: "numeric" }, zone)),
+    full: start.toLocaleDateString("en-US", Object.assign({ weekday: "long", month: "long", day: "numeric" }, zone)),
     time: start.toLocaleTimeString("en-US", Object.assign({ hour: "numeric", minute: "2-digit" }, zone)) +
       "–" + end.toLocaleTimeString("en-US", Object.assign({ hour: "numeric", minute: "2-digit" }, zone))
   };
@@ -284,16 +280,16 @@ function createEventCard(event) {
         <span class="event-month">${date.month}</span>
         <span class="event-day">${date.day}</span>
       </div>
-      <div class="event-info">
-        <span class="tag">${event.type}</span>
+      <div>
+        <span class="badge">${event.type}</span>
         <h3>${event.title}</h3>
-        <p class="event-meta">${icon("calendar")} <span><strong>${date.full}</strong> · ${date.time}</span></p>
+        <p class="event-meta">${icon("calendar")} <span>${date.full} · ${date.time}</span></p>
         <p class="event-meta">${icon("pin")} <span>${event.location}, ${event.address}</span></p>
-        <p>${event.description}</p>
-        <p class="event-foot">
-          <span>Hosted by ${event.organizer} · ${event.cost}</span>
-          <a href="${event.source}" target="_blank" rel="noopener">Official listing ${icon("external")}<span class="visually-hidden"> (opens in a new tab)</span></a>
-          <a href="${directionsURL(event.address)}" target="_blank" rel="noopener">Directions ${icon("external")}<span class="visually-hidden"> (opens in a new tab)</span></a>
+        <p class="event-desc">${event.description}</p>
+        <p class="event-links">
+          <span>${event.organizer} · ${event.cost}</span>
+          <a href="${event.source}" target="_blank" rel="noopener">Official listing<span class="visually-hidden"> (opens in a new tab)</span></a>
+          <a href="${directionsURL(event.address)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens in a new tab)</span></a>
         </p>
       </div>
     </article>`;
@@ -302,12 +298,9 @@ function createEventCard(event) {
 function eventsEmptyState() {
   return `
     <div class="empty-state">
-      <span class="empty-icon">${icon("calendar")}</span>
-      <h3>No verified upcoming events right now</h3>
-      <p>We only list events we have confirmed on an official calendar, and we remove them once they end. Check these official sources for the latest:</p>
-      <ul class="source-links">
-        ${eventSources.map(function (s) { return `<li><a href="${s.url}" target="_blank" rel="noopener">${s.name}</a> — ${s.note}</li>`; }).join("")}
-      </ul>
+      ${icon("calendar")}
+      <h3>No upcoming events listed</h3>
+      <p>We only list verified events and remove them once they end. Check an official calendar below.</p>
     </div>`;
 }
 
@@ -325,7 +318,7 @@ function openDetails(id) {
 
   const phones = resource.phones.map(function (p) {
     const href = p.sms ? "sms:" + p.number : telHref(p.number);
-    return `<li><a href="${href}">${p.number}</a> <span class="muted">${p.label}</span></li>`;
+    return `<li><a href="${href}">${p.number}</a> <span class="muted">· ${p.label}</span></li>`;
   }).join("");
 
   const locations = resource.locations.length
@@ -333,32 +326,33 @@ function openDetails(id) {
         return `<li><strong>${l.label}</strong><br>${l.address}
           ${l.hours ? `<br><span class="muted">${l.hours}</span>` : ""}
           ${l.phone ? `<br><a href="${telHref(l.phone)}">${l.phone}</a>` : ""}
-          <br><a href="${directionsURL(l.address)}" target="_blank" rel="noopener">Get directions ${icon("external")}<span class="visually-hidden"> (opens in a new tab)</span></a></li>`;
+          <br><a href="${directionsURL(l.address)}" target="_blank" rel="noopener">Get directions<span class="visually-hidden"> (opens in a new tab)</span></a></li>`;
       }).join("")
     : "<li>No public walk-in location listed. Contact by phone or online.</li>";
 
   const extraLinks = (resource.links || []).map(function (link) {
-    return `<li><a href="${link.url}" target="_blank" rel="noopener">${link.label} ${icon("external")}</a></li>`;
+    return `<li><a href="${link.url}" target="_blank" rel="noopener">${link.label}<span class="visually-hidden"> (opens in a new tab)</span></a></li>`;
   }).join("");
 
   document.getElementById("dialog-content").innerHTML = `
-    <div class="dialog-tags">${categoryTags}${resource.urgent ? '<span class="badge-urgent">24/7 crisis line</span>' : ""}</div>
+    <div class="dialog-tags">${resource.categories.map(function (c) { return `<span class="badge">${getCategory(c).short}</span>`; }).join("")}${resource.urgent ? '<span class="badge badge-urgent">24/7 crisis line</span>' : ""}</div>
     <h2 id="dialog-title">${resource.name}</h2>
     <p class="dialog-lead">${resource.description}</p>
     <dl class="details-list">
-      <dt>Phone</dt>       <dd><ul class="plain-list">${phones}</ul></dd>
-      <dt>Locations</dt>   <dd><ul class="plain-list">${locations}</ul></dd>
+      <dt>Phone</dt>       <dd><ul>${phones}</ul></dd>
+      <dt>Locations</dt>   <dd><ul>${locations}</ul></dd>
       <dt>Hours</dt>       <dd>${resource.hours}</dd>
       <dt>Eligibility</dt> <dd>${resource.eligibility}</dd>
       <dt>Cost</dt>        <dd>${resource.cost}</dd>
-      <dt>Service area</dt><dd>${resource.area === "countywide" ? "All of Pinellas County" : "Not stated by the organization — call to confirm"}${resource.areaNote ? `<br><span class="muted">${resource.areaNote}</span>` : ""}</dd>
-      <dt>Website</dt>     <dd><ul class="plain-list"><li><a href="${resource.website}" target="_blank" rel="noopener">Official website ${icon("external")}<span class="visually-hidden"> (opens in a new tab)</span></a></li>${extraLinks}</ul></dd>
+      <dt>Service area</dt><dd>${resource.area === "countywide" ? "All of Pinellas County" : "Not stated by the organization. Call to confirm."}${resource.areaNote ? `<br><span class="muted">${resource.areaNote}</span>` : ""}</dd>
+      <dt>Links</dt>       <dd><ul><li><a href="${resource.website}" target="_blank" rel="noopener">Official website<span class="visually-hidden"> (opens in a new tab)</span></a></li>${extraLinks}</ul></dd>
     </dl>
-    <p class="dialog-verified">${icon("check")} <span>Verified ${formatVerified(resource.verified)} against the <a href="${resource.source}" target="_blank" rel="noopener">official source</a>. Services change; please confirm with the organization before you go.</span></p>
-    <div class="helpful-box">
-      <p id="helpful-question">Was this information helpful?</p>
-      <button class="button button-small button-quiet" type="button" data-helpful="yes">Yes</button>
-      <button class="button button-small button-quiet" type="button" data-helpful="no">No</button>
+    <div class="dialog-actions">${saveButton(resource)} <span class="muted">Save to your list</span></div>
+    <p class="dialog-verified">${icon("check")} <span>Verified ${formatVerified(resource.verified)} against the <a href="${resource.source}" target="_blank" rel="noopener">official source</a>. Confirm before you go.</span></p>
+    <div class="helpful">
+      <span id="helpful-question">Was this helpful?</span>
+      <button class="button button-small button-secondary" type="button" data-helpful="yes">Yes</button>
+      <button class="button button-small button-secondary" type="button" data-helpful="no">No</button>
     </div>`;
 
   dialog.showModal();
@@ -378,7 +372,7 @@ function setupDialog() {
     const answer = event.target.closest("[data-helpful]");
     if (!answer) return;
     trackEvent(answer.dataset.helpful === "yes" ? "helpfulYes" : "helpfulNo");
-    answer.parentElement.innerHTML = "<p role='status'>Thank you! Your feedback helps us improve.</p>";
+    answer.parentElement.innerHTML = "<span role='status'>Thanks for the feedback.</span>";
   });
 }
 
@@ -396,8 +390,9 @@ document.addEventListener("click", function (event) {
     const id = saveButton.dataset.id;
     toggleFavorite(id);
     const saved = isFavorite(id);
-    saveButton.setAttribute("aria-pressed", saved);
-    saveButton.querySelector(".save-label").textContent = saved ? "Saved" : "Save";
+    document.querySelectorAll('.save-button[data-id="' + id + '"]').forEach(function (button) {
+      button.setAttribute("aria-pressed", saved);
+    });
     if (typeof onFavoritesChanged === "function") onFavoritesChanged();
   }
 });
@@ -441,6 +436,7 @@ function fillSelects() {
 fillStaticIcons();
 fillSelects();
 setupMenu();
+markCurrentPage();
 setupTextSize();
 setupDialog();
 updateSavedCount();

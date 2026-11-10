@@ -4,168 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Search verified Pinellas County resources by category, city, and cost.">
-  <meta name="theme-color" content="#fbfaf7">
-  <title>Resource Directory | Pinellas Connect</title>
+  <meta name="theme-color" content="#ffffff">
+  <title>Resources | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <!-- ===== Help bar (same on every page) ===== -->
-  <div class="help-bar">
-    <div class="container">
-      <p><strong>Need help now?</strong>
-        Emergency <a href="tel:911">911</a> ·
-        Crisis line (call or text) <a href="tel:988">988</a> ·
-        Local services <a href="tel:211">211</a></p>
-      <p><a class="help-storm" href="emergency.html">Hurricane &amp; evacuation info →</a></p>
-    </div>
-  </div>
-
-  <!-- ===== Header and navigation (same on every page) ===== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <img src="images/logo.svg" alt="" width="32" height="32">
-        <span>Pinellas <strong>Connect</strong></span>
-      </a>
-      <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
-        <span aria-hidden="true">☰</span> Menu
-      </button>
-      <nav id="main-nav" class="main-nav" aria-label="Main">
+      <a class="logo" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28">Pinellas Connect</a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="resources.html">Resources</a>
+        <a href="map.html">Map</a>
+        <a href="events.html">Events</a>
+        <a class="nav-emergency" href="emergency.html">Emergency</a>
+      </nav>
+      <div class="header-actions">
+        <a class="icon-button" href="saved.html"><span data-icon="heart"></span><span class="visually-hidden">Saved resources</span><span id="saved-count" class="count-badge" hidden>0</span></a>
+        <button id="menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span data-icon="menu"></span></button>
+      </div>
+    </div>
+    <div id="menu-panel" class="menu-panel" hidden>
+      <nav class="container" aria-label="Menu">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="resources.html" aria-current="page">Resources</a></li>
-          <li><a href="map.html">Map</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a class="nav-emergency" href="emergency.html"><span class="nav-dot" aria-hidden="true"></span>Hurricane &amp; Emergency</a></li>
-          <li><a href="saved.html">Saved <span id="saved-count" class="count-badge" hidden>0</span></a></li>
+          <li class="menu-primary"><a href="resources.html">Resources</a></li>
+          <li class="menu-primary"><a href="map.html">Map</a></li>
+          <li class="menu-primary"><a href="events.html">Events</a></li>
+          <li class="menu-primary"><a class="nav-emergency" href="emergency.html">Hurricane &amp; Emergency</a></li>
+          <li><a href="saved.html">Saved</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
-        <button id="text-size-button" class="text-size-button" type="button" aria-pressed="false">
-          <span aria-hidden="true">A+</span> Larger text
-        </button>
+        <div class="menu-footer">
+          <button id="text-size-button" class="button button-small button-secondary" type="button" aria-pressed="false">Larger text</button>
+        </div>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="page-header">
-      <div class="container">
-        <p class="eyebrow"><span data-icon="search"></span> Resource Directory</p>
-        <h1>Find local resources.</h1>
-        <p>Search verified Pinellas County services, then narrow by category, location, and cost.</p>
+    <div class="container">
+      <div class="page-head">
+        <h1>Resources</h1>
+        <p>Find local support, fast.</p>
       </div>
-    </section>
 
-    <section class="section" style="padding-top:1rem">
-      <div class="container">
-        <form id="filter-form" class="filter-panel" role="search" aria-label="Filter resources">
-          <div class="field">
-            <label for="search">Search</label>
-            <input id="search" type="search" placeholder="e.g. groceries, eviction, GED, bus" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="city">Location</label>
-            <select id="city" data-fill="cities">
-              <option value="all">All of Pinellas County</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="sort">Sort by</label>
-            <select id="sort">
-              <option value="az">Name (A–Z)</option>
-              <option value="za">Name (Z–A)</option>
-              <option value="urgent">Crisis lines first</option>
-            </select>
-          </div>
-          <div class="field field-checkbox">
-            <input id="free-only" type="checkbox">
-            <label for="free-only">Free only</label>
-          </div>
-        </form>
-
-        <div id="category-buttons" class="chips" role="group" aria-label="Filter by category"></div>
-
-        <div class="results-bar">
-          <p id="results-count" class="results-count" aria-live="polite"></p>
-          <button id="reset-button" class="button button-small button-quiet" type="button">Reset filters</button>
-        </div>
-        <p id="results-note" class="results-note"></p>
-        <div id="results" class="card-grid" style="margin-top:1rem"></div>
-
-        <div id="no-results" class="empty-state" hidden>
-          <span class="empty-icon"><span data-icon="search"></span></span>
-          <h2>No resources match your search</h2>
-          <p>Try a different word or remove a filter. You can also call or text <a href="tel:211">211</a> to talk with a resource specialist, any time, day or night.</p>
-          <button id="reset-button-2" class="button" type="button">Show all resources</button>
+      <form id="filter-form" role="search" aria-label="Search and filter resources">
+        <div class="search-bar" style="margin-bottom:32px">
+          <span data-icon="search"></span>
+          <label class="visually-hidden" for="search">Search resources</label>
+          <input id="search" type="search" placeholder="Search by need, name, or place" autocomplete="off">
         </div>
 
-        <div class="disclaimer">
-          <span data-icon="info"></span>
-          <p>“Serves all of Pinellas” means the organization or its source says it serves the whole county. Listings marked “call to confirm area” are in a specific city, and the source didn't say who else they serve.</p>
+        <div class="directory">
+          <div>
+            <button id="filter-toggle" class="button button-secondary filter-toggle" type="button" aria-expanded="false" aria-controls="filters">Filters</button>
+            <div id="filters" class="filters">
+              <fieldset>
+                <legend>Category</legend>
+                <div id="category-options" class="radio-list"></div>
+              </fieldset>
+              <div class="field">
+                <label for="city">City</label>
+                <select id="city" data-fill="cities">
+                  <option value="all">All of Pinellas</option>
+                </select>
+              </div>
+              <fieldset>
+                <legend>More filters</legend>
+                <label class="check"><input id="free-only" type="checkbox"> Free only</label>
+                <label class="check"><input id="countywide-only" type="checkbox"> Serves all of Pinellas</label>
+                <label class="check"><input id="urgent-only" type="checkbox"> 24/7 crisis lines</label>
+              </fieldset>
+              <button id="reset-button" class="text-button" type="button">Clear filters</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="results-bar">
+              <p id="results-count" class="results-count" aria-live="polite"></p>
+              <div>
+                <label class="visually-hidden" for="sort">Sort</label>
+                <select id="sort">
+                  <option value="az">A to Z</option>
+                  <option value="urgent">Crisis lines first</option>
+                </select>
+              </div>
+            </div>
+            <p id="results-note" class="muted" style="margin:-8px 0 20px;font-size:.875rem"></p>
+            <div id="results" class="grid"></div>
+            <div id="no-results" class="empty-state" hidden>
+              <span data-icon="search"></span>
+              <h2>No matches</h2>
+              <p>Try fewer words or clear filters. You can also call <a href="tel:211">211</a> for help any time.</p>
+              <button id="reset-button-2" class="button" type="button">Clear filters</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </form>
+    </div>
   </main>
 
   <dialog id="details-dialog" aria-labelledby="dialog-title">
     <div class="dialog-inner">
-      <button id="close-dialog" class="close-button" type="button" aria-label="Close details">✕</button>
+      <button id="close-dialog" class="icon-button close-button" type="button" aria-label="Close details"><span data-icon="close"></span></button>
       <div id="dialog-content"></div>
     </div>
   </dialog>
 
-  <!-- ===== Footer (same on every page) ===== -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
+      <div class="footer-inner">
         <div>
-          <p class="footer-logo">Pinellas <strong>Connect</strong></p>
-          <p>Trusted local services, programs, and support across Pinellas County, Florida, verified against official sources.</p>
+          <p class="footer-logo">Pinellas Connect</p>
+          <p>Local help across Pinellas County, Florida.</p>
         </div>
-        <nav aria-label="Find help">
-          <h2>Find help</h2>
-          <ul>
-            <li><a href="resources.html">Resource Directory</a></li>
-            <li><a href="map.html">Resource Map</a></li>
-            <li><a href="events.html">Community Events</a></li>
-            <li><a href="emergency.html">Hurricane &amp; Emergency</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Your list">
-          <h2>Your list</h2>
-          <ul>
-            <li><a href="saved.html">Saved Resources</a></li>
-            <li><a href="contact.html">Suggest a Resource</a></li>
-            <li><a href="contact.html">Report Outdated Info</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="About this site">
-          <h2>About</h2>
-          <ul>
-            <li><a href="about.html">Our Mission</a></li>
-            <li><a href="about.html#verification">How We Verify</a></li>
-            <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+        <nav aria-label="Footer">
+          <ul class="footer-links">
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="emergency.html">Emergency</a></li>
+            <li><a href="saved.html">Saved</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="about.html#sources">Sources</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </nav>
       </div>
       <div class="footer-bottom">
-        <p><strong>Please confirm before you go.</strong> Listings were checked against official sources on the date shown on each one, but hours and services change. Contact the organization directly to confirm. In an emergency, call 911.</p>
-        <p>© <span class="js-year">2026</span> Pinellas Connect, an independent student project for the FBLA Website Design event. Not affiliated with Pinellas County Government or any organization listed.</p>
+        <p>In an emergency, call <a href="tel:911">911</a>. Services change, so confirm before you go.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</p>
       </div>
     </div>
   </footer>
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
-  
   <script src="js/resources.js"></script>
 </body>
 </html>

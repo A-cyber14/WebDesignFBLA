@@ -27,15 +27,14 @@ function showEvents() {
 
   eventList.innerHTML = matches.map(createEventCard).join("");
   eventCount.textContent = upcoming.length
-    ? `Showing ${matches.length} of ${upcoming.length} upcoming verified events`
+    ? `${matches.length} upcoming ${matches.length === 1 ? "event" : "events"}`
     : "";
 
   if (upcoming.length === 0) {
     noEvents.innerHTML = eventsEmptyState();
     noEvents.hidden = false;
   } else if (matches.length === 0) {
-    noEvents.innerHTML = `<div class="empty-state"><span class="empty-icon">${icon("calendar")}</span>
-      <h3>No events match these filters</h3><p>Try “All types” or “All of Pinellas,” or check the official calendars below.</p></div>`;
+    noEvents.innerHTML = `<div class="empty-state">${icon("calendar")}<h3>No events match</h3><p>Try another type or city.</p></div>`;
     noEvents.hidden = false;
   } else {
     noEvents.hidden = true;
@@ -47,7 +46,7 @@ eventCitySelect.addEventListener("change", function () { trackEvent("filtersUsed
 
 // Official calendars (always shown at the bottom of the page)
 document.getElementById("official-calendars").innerHTML = eventSources.map(function (s) {
-  return `<li><a href="${s.url}" target="_blank" rel="noopener">${s.name}<span class="visually-hidden"> (opens in a new tab)</span></a> — ${s.note}</li>`;
+  return `<li><a href="${s.url}" target="_blank" rel="noopener">${s.name}<span class="visually-hidden"> (opens in a new tab)</span></a> <span class="muted">· ${s.note}</span></li>`;
 }).join("");
 
 showEvents();

@@ -19,13 +19,13 @@ Every organization and event is **real**. Each listing was checked against the o
 
 | Page | What it does |
 |---|---|
-| `index.html` | Hero search (keyword + category + city), category tiles, live map preview, "Start here" services, hurricane banner, next events, trust section |
+| `index.html` | Hero search, category tiles, "Start here" services, map preview, compact urgent-help section |
 | `resources.html` | Directory with search, 12 category chips, city filter, "Free only", sorting. Filters can be shared through the URL (`?search=&category=&city=`) |
 | `map.html` | Interactive Leaflet map with category/city/search filters, preview cards, directions, click-to-call, and a full list view |
 | `events.html` | Verified upcoming events with type and city filters. Events disappear automatically when they end, and an empty state links to official calendars |
 | `emergency.html` | Hurricane and disaster resources: tappable emergency numbers, plus official links grouped into Before / Flooding / During / After |
 | `saved.html` | Saved resources (stored in this browser) with printing |
-| `about.html` | Mission, verification method, design decisions, accessibility, KPIs and a live metrics demo, and a source table generated from the data |
+| `about.html` | Mission, how data is maintained, collapsible source tables, and project notes (KPIs, live metrics demo, build details) |
 | `contact.html` | Suggest a resource or report outdated info, with form validation |
 
 ## File structure
@@ -44,6 +44,7 @@ fbla-community-hub/
     ├── map.js        Map page
     ├── events.js     Events page
     ├── saved.js      Saved list
+    ├── emergency.js  Emergency organizations list
     ├── about.js      Metrics demo + source tables
     └── contact.js    Form validation
 ```

@@ -31,18 +31,18 @@ const cities = [
 
 // Resource categories. "icon" is a key in the ICONS object in main.js.
 const categories = [
-  { id: "food",           name: "Food",                 icon: "food",           color: "#E0761B" },
-  { id: "housing",        name: "Housing & Shelter",    icon: "housing",        color: "#2F6FDB" },
-  { id: "health",         name: "Health & Mental Health", icon: "health",       color: "#D93A5B" },
-  { id: "jobs",           name: "Jobs & Careers",       icon: "jobs",           color: "#7A4FD6" },
-  { id: "education",      name: "Education",            icon: "education",      color: "#1D8A6F" },
-  { id: "seniors",        name: "Seniors",              icon: "seniors",        color: "#B8691E" },
-  { id: "transportation", name: "Transportation",       icon: "transportation", color: "#0A84A8" },
-  { id: "disability",     name: "Disability & Access",  icon: "disability",     color: "#4C5FD5" },
-  { id: "family",         name: "Family & Childcare",   icon: "family",         color: "#C2448F" },
-  { id: "emergency",      name: "Emergency & Disaster", icon: "emergency",      color: "#C4281C" },
-  { id: "financial",      name: "Financial & Legal",    icon: "financial",      color: "#2E7D32" },
-  { id: "veterans",       name: "Veterans",             icon: "veterans",       color: "#34507A" }
+  { id: "food",           name: "Food", short: "Food",                 icon: "food",           color: "#E0761B" },
+  { id: "housing",        name: "Housing & Shelter", short: "Housing",    icon: "housing",        color: "#2F6FDB" },
+  { id: "health",         name: "Health & Mental Health", short: "Health", icon: "health",       color: "#D93A5B" },
+  { id: "jobs",           name: "Jobs & Careers", short: "Jobs",       icon: "jobs",           color: "#7A4FD6" },
+  { id: "education",      name: "Education", short: "Education",            icon: "education",      color: "#1D8A6F" },
+  { id: "seniors",        name: "Seniors", short: "Seniors",              icon: "seniors",        color: "#B8691E" },
+  { id: "transportation", name: "Transportation", short: "Transportation",       icon: "transportation", color: "#0A84A8" },
+  { id: "disability",     name: "Disability & Access", short: "Disability",  icon: "disability",     color: "#4C5FD5" },
+  { id: "family",         name: "Family & Childcare", short: "Family",   icon: "family",         color: "#C2448F" },
+  { id: "emergency",      name: "Emergency & Disaster", short: "Emergency", icon: "emergency",      color: "#C4281C" },
+  { id: "financial",      name: "Financial & Legal", short: "Money & Legal",    icon: "financial",      color: "#2E7D32" },
+  { id: "veterans",       name: "Veterans", short: "Veterans",             icon: "veterans",       color: "#34507A" }
 ];
 
 /* ---------------------------------------------------------
