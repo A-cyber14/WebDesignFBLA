@@ -68,9 +68,9 @@ function showEvents() {
   eventList.innerHTML = html;
 
   if (matches.length === 1) {
-    eventCount.textContent = "1 upcoming event";
+    eventCount.textContent = "1 upcoming sample event";
   } else {
-    eventCount.textContent = matches.length + " upcoming events";
+    eventCount.textContent = matches.length + " upcoming sample events";
   }
 
   // Messages for when nothing shows up

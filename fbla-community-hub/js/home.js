@@ -15,7 +15,7 @@ document.getElementById("category-grid").innerHTML = categoryHTML;
 const featuredIds = ["harbor-table-pantry", "bayview-housing-help", "coastline-community-clinic"];
 let featuredHTML = "";
 featuredIds.forEach(function (id) {
-  featuredHTML += createResourceCard(getResource(id));
+  featuredHTML += createResourceCard(getResource(id), "h3");
 });
 document.getElementById("featured-list").innerHTML = featuredHTML;
 

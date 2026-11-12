@@ -6,7 +6,7 @@ This is my website for the 2026–27 FBLA Website Design event. The topic this y
 
 ## How to open it
 
-The easiest way is to just double-click `index.html`. Everything works except the map, which needs the internet to load.
+The easiest way is to go to webdesignfbla.vercel.app
 
 You can also run it with a small local server:
 
@@ -26,7 +26,7 @@ Then go to http://localhost:8000.
 - **Saved** – the resources you saved (they stay in your browser), with a print button
 - **Emergency** – real numbers to call and official hurricane links
 - **About** – why I made the site, how I designed it, how I'd measure if it works, and my sources
-- **Contact** – a form you can fill out (it's a demo, so it doesn't actually send anything)
+- **Contact** – a form that checks what you typed (it's a demo, so it doesn't actually send anything)
 
 ## How the code is set up
 

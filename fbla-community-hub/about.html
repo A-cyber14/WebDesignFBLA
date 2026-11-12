@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=13">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -28,7 +28,7 @@
       </nav>
       <div class="header-actions">
         <a class="saved-link" href="saved.html"><span data-icon="bookmark"></span>Saved<span id="saved-count" class="count-badge" hidden>0</span></a>
-        <button id="menu-button" class="icon-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer" aria-label="Open menu"><span data-icon="menu"></span></button>
+        <button id="menu-button" class="more-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer"><span data-icon="menu"></span><span class="more-label">More</span></button>
       </div>
     </div>
   </header>
@@ -36,22 +36,10 @@
   <main id="main">
     <div class="container page-intro">
       <h1>About</h1>
-      <p class="lead">Pinellas Connect is one clear place to find community help. It's an FBLA Website Design project.</p>
+      <p class="lead">Pinellas Connect is an FBLA Website Design project that demonstrates how residents could find community resources in Pinellas County.</p>
     </div>
 
-    <div class="container" style="padding-bottom:var(--space)">
-      <section class="row">
-        <h2>Our Mission</h2>
-        <div class="row-body">
-          <p>Make community resources easy to find, understand, and use, on any device.</p>
-        </div>
-      </section>
-      <section class="row">
-        <h2>Why It Exists</h2>
-        <div class="row-body">
-          <p>Help is often spread across many websites, PDFs, and flyers. Pinellas Connect puts it in one searchable place with a map, events, and a saved list.</p>
-        </div>
-      </section>
+    <div class="container" style="padding-bottom: 80px">
       <section class="row" id="demo-data">
         <h2>About the Data</h2>
         <div class="row-body">
@@ -69,8 +57,8 @@
           <ul class="points">
           <li><strong>Search first.</strong> A large search bar opens the home page, because many users go straight to search [1].</li>
           <li><strong>Filters above results.</strong> Category, city, and cost filters update results instantly, a common pattern for browsing large lists [2].</li>
-          <li><strong>Type and space do the work.</strong> Large, confident headlines, generous white space, and hairline dividers instead of boxes, so each page has one clear focus. Blue marks actions; red is saved for urgent items.</li>
-          <li><strong>A few strong moments.</strong> A full-width photo hero, a framed map, and big emergency numbers, instead of many identical cards.</li>
+          <li><strong>Simple layout.</strong> Each page has one main heading, white space between sections, and thin lines between items instead of boxes. Blue marks links and buttons; red is used only for 911.</li>
+          <li><strong>Fewer cards.</strong> Resources and events are shown as lists, so people can scan names quickly. The home page has one photo, one map preview, and large emergency phone numbers.</li>
           <li><strong>Phone first.</strong> Most U.S. adults own a smartphone [3], so every page was laid out for phones first, then tablet and desktop.</li>
           <li><strong>The same parts on every page.</strong> One header, footer, list row, button, and pop-up design, so people learn the site once.</li>
           <li><strong>Inter typeface.</strong> Designed for reading on screens [4], with the device's own font as a backup.</li>
@@ -86,7 +74,7 @@
           <li>Everything works with a keyboard, with a visible focus ring and a “Skip to main content” link.</li>
           <li>Result counts and save confirmations are announced to screen readers (WCAG 4.1.3) [5].</li>
           <li>The map has a list view with the same results, so nothing is shown only visually.</li>
-          <li>An accessibility button in the bottom corner of every page with larger text, high contrast, reading highlight, and reading spacing (WCAG 1.4.12). Settings are saved on this device.</li>
+          <li>An accessibility button in the bottom-left corner of every page with larger text, high contrast, reading highlight, and reading spacing (WCAG 1.4.12). Settings are saved on this device.</li>
           <li>Pages reflow at 320 pixels wide and at 200% text without sideways scrolling (WCAG 1.4.10, 1.4.4).</li>
           <li>Animations turn off for people who prefer reduced motion [7].</li>
         </ul>
@@ -173,13 +161,13 @@
     </div>
   </dialog>
 
-  <dialog id="menu-drawer" class="drawer" aria-label="Menu">
+  <dialog id="menu-drawer" class="drawer" aria-label="More pages">
     <div class="drawer-inner">
       <div class="drawer-head">
-        <p>Menu</p>
-        <button class="icon-button" type="button" data-close-dialog aria-label="Close menu"><span data-icon="close"></span></button>
+        <p>More</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close"><span data-icon="close"></span></button>
       </div>
-      <nav aria-label="Menu">
+      <nav aria-label="More pages">
         <ul>
           <li><a href="about.html">About</a></li>
           <li><a href="about.html#sources">Sources &amp; Credits</a></li>
@@ -189,7 +177,7 @@
     </div>
   </dialog>
 
-  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options"><span data-icon="disability"></span></button>
+  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility settings"><span data-icon="disability"></span></button>
   <dialog id="a11y-panel" class="a11y-panel" aria-labelledby="a11y-title">
     <div class="drawer-inner">
       <div class="drawer-head">
@@ -213,7 +201,7 @@
       <div class="footer-inner">
         <div>
           <p class="footer-logo">Pinellas Connect</p>
-          <p>Local help across Pinellas County, Florida.</p>
+          <p>Independent FBLA student project.</p>
         </div>
         <nav aria-label="Footer">
           <ul class="footer-links">
@@ -231,13 +219,13 @@
       </div>
       <div class="footer-bottom">
         <p>In an emergency, call <a href="tel:911">911</a>. For local help, call <a href="tel:211">211</a>.</p>
-        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect. Not affiliated with Pinellas County Government.</p>
       </div>
     </div>
   </footer>
 
-  <script src="js/data.js?v=7"></script>
-  <script src="js/main.js?v=7"></script>
-  <script src="js/about.js?v=7"></script>
+  <script src="js/data.js?v=13"></script>
+  <script src="js/main.js?v=13"></script>
+  <script src="js/about.js?v=13"></script>
 </body>
 </html>

@@ -56,7 +56,6 @@ function showPreview(index) {
       <p><strong>${place.location.label}</strong><br>${place.location.address}</p>
       <p>${resource.hours}</p>
       <div class="preview-actions">
-        <a class="button button-small" href="${directionsURL(place.location)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${resource.name} (opens in a new tab)</span></a>
         <a class="button button-small button-secondary" href="${telHref(phone)}">Call</a>
         <button class="button button-small button-secondary details-button" type="button" data-id="${resource.id}">Details</button>
       </div>
@@ -105,7 +104,6 @@ function render() {
         <p>${place.location.address}</p>
         <div class="map-list-actions">
           ${showOnMapButton}
-          <a href="${directionsURL(place.location)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${resource.name} (opens in a new tab)</span></a>
           <button type="button" class="details-button" data-id="${resource.id}">Details<span class="visually-hidden"> for ${resource.name}</span></button>
         </div>
       </li>`;
@@ -163,8 +161,23 @@ function render() {
 
   // Zoom the map to fit all the pins
   if (shownPlaces.length > 0) {
-    map.fitBounds(pinLayer.getBounds(), { padding: [50, 50], maxZoom: 15 });
+    fitPins();
   }
+}
+
+
+// Frames all the pins. On wide screens the list panel covers the left
+// side of the map, so we leave extra room there.
+function fitPins() {
+  let leftSpace = 40;
+  if (window.innerWidth >= 1024) {
+    leftSpace = 400;
+  }
+  map.fitBounds(pinLayer.getBounds(), {
+    paddingTopLeft: [leftSpace, 40],
+    paddingBottomRight: [40, 40],
+    maxZoom: 14
+  });
 }
 
 
@@ -212,7 +225,14 @@ if (mapLoaded) {
     markerZoomAnimation: !reduceMotion
   });
   addBaseTiles(map);
-  pinLayer = L.featureGroup().addTo(map);
+  // Pins that are close together join into one numbered circle.
+  // Clicking the circle zooms in so each pin can be picked.
+  if (L.markerClusterGroup) {
+    pinLayer = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 40 });
+  } else {
+    pinLayer = L.featureGroup();
+  }
+  pinLayer.addTo(map);
   map.setView([27.9, -82.73], 10); // Pinellas County
 } else {
   showListInstead();
@@ -247,8 +267,15 @@ mapList.addEventListener("click", function (event) {
   const place = shownPlaces[index];
 
   switchView("map");
-  map.setView([place.location.lat, place.location.lng], 15);
-  showPreview(index);
+  // If the pin is inside a numbered circle, zoom in until it shows
+  if (pinLayer.zoomToShowLayer) {
+    pinLayer.zoomToShowLayer(pins[index], function () {
+      showPreview(index);
+    });
+  } else {
+    map.setView([place.location.lat, place.location.lng], 15);
+    showPreview(index);
+  }
 });
 
 // Links like map.html?city=Largo open the map already filtered

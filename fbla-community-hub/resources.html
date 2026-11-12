@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=13">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -28,15 +28,14 @@
       </nav>
       <div class="header-actions">
         <a class="saved-link" href="saved.html"><span data-icon="bookmark"></span>Saved<span id="saved-count" class="count-badge" hidden>0</span></a>
-        <button id="menu-button" class="icon-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer" aria-label="Open menu"><span data-icon="menu"></span></button>
+        <button id="menu-button" class="more-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer"><span data-icon="menu"></span><span class="more-label">More</span></button>
       </div>
     </div>
   </header>
 
   <main id="main">
-    <div class="container page-intro" style="padding-bottom:20px">
+    <div class="container page-intro">
       <h1>Resources</h1>
-      <p class="lead">Find local support, fast.</p>
     </div>
 
     <div class="directory-tools">
@@ -70,9 +69,10 @@
       </form>
     </div>
 
-    <div class="container" style="padding-bottom:var(--space)">
+    <div class="container" style="padding-bottom: 80px">
       <div class="results-bar">
-        <p id="results-count" class="results-count" aria-live="polite"></p>
+        <p id="results-count" class="results-count"></p>
+        <p id="results-status" class="visually-hidden" aria-live="polite"></p>
         <ul id="active-filters" class="active-filters" aria-label="Active filters"></ul>
         <div class="results-tools">
           <button id="reset-button" class="text-button" type="button" hidden>Reset All</button>
@@ -83,7 +83,7 @@
       <div id="no-results" class="empty-state" hidden>
         <span data-icon="search"></span>
         <h2>No Matches</h2>
-        <p>Try fewer words or reset filters. For real help, call <a href="tel:211">211</a>.</p>
+        <p>Try fewer words or reset the filters. For local help, call <a href="tel:211">211</a>.</p>
         <button id="reset-button-2" class="button" type="button">Reset All</button>
       </div>
     </div>
@@ -96,13 +96,13 @@
     </div>
   </dialog>
 
-  <dialog id="menu-drawer" class="drawer" aria-label="Menu">
+  <dialog id="menu-drawer" class="drawer" aria-label="More pages">
     <div class="drawer-inner">
       <div class="drawer-head">
-        <p>Menu</p>
-        <button class="icon-button" type="button" data-close-dialog aria-label="Close menu"><span data-icon="close"></span></button>
+        <p>More</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close"><span data-icon="close"></span></button>
       </div>
-      <nav aria-label="Menu">
+      <nav aria-label="More pages">
         <ul>
           <li><a href="about.html">About</a></li>
           <li><a href="about.html#sources">Sources &amp; Credits</a></li>
@@ -112,7 +112,7 @@
     </div>
   </dialog>
 
-  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options"><span data-icon="disability"></span></button>
+  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility settings"><span data-icon="disability"></span></button>
   <dialog id="a11y-panel" class="a11y-panel" aria-labelledby="a11y-title">
     <div class="drawer-inner">
       <div class="drawer-head">
@@ -136,7 +136,7 @@
       <div class="footer-inner">
         <div>
           <p class="footer-logo">Pinellas Connect</p>
-          <p>Local help across Pinellas County, Florida.</p>
+          <p>Independent FBLA student project.</p>
         </div>
         <nav aria-label="Footer">
           <ul class="footer-links">
@@ -154,13 +154,13 @@
       </div>
       <div class="footer-bottom">
         <p>In an emergency, call <a href="tel:911">911</a>. For local help, call <a href="tel:211">211</a>.</p>
-        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect. Not affiliated with Pinellas County Government.</p>
       </div>
     </div>
   </footer>
 
-  <script src="js/data.js?v=7"></script>
-  <script src="js/main.js?v=7"></script>
-  <script src="js/resources.js?v=7"></script>
+  <script src="js/data.js?v=13"></script>
+  <script src="js/main.js?v=13"></script>
+  <script src="js/resources.js?v=13"></script>
 </body>
 </html>

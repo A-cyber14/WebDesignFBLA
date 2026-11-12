@@ -85,10 +85,6 @@ function telHref(number) {
   return "tel:" + number.replace(/[^0-9]/g, "");
 }
 
-// Google Maps directions to a map pin
-function directionsURL(location) {
-  return "https://www.google.com/maps/dir/?api=1&destination=" + location.lat + "," + location.lng;
-}
 
 // Shows a short message at the bottom of the screen, like "Saved ...".
 // It has role="status", so screen readers read it out loud too.
@@ -337,13 +333,23 @@ function areaText(resource) {
   return cityNames.join(", ");
 }
 
+// The label a screen reader hears depends on whether it's saved
+function saveLabel(resource, saved) {
+  if (saved) {
+    return "Remove " + resource.name + " from saved resources";
+  }
+  return "Save " + resource.name;
+}
+
 function saveButton(resource) {
   const saved = isFavorite(resource.id);
-  return `<button class="save-button" type="button" data-id="${resource.id}" aria-pressed="${saved}" aria-label="Save ${resource.name}">${icon("bookmark")}</button>`;
+  return `<button class="save-button" type="button" data-id="${resource.id}" aria-pressed="${saved}" aria-label="${saveLabel(resource, saved)}">${icon("bookmark")}</button>`;
 }
 
 // One row in a list of resources
-function createResourceCard(resource) {
+// One row in a list of resources. The name is the button that opens
+// the details. headingTag is "h2" or "h3" so the page's headings stay in order.
+function createResourceCard(resource, headingTag) {
   const category = getCategory(resource.categories[0]);
   const phoneNumbers = resource.phones.map(function (phone) {
     return phone.number;
@@ -353,15 +359,12 @@ function createResourceCard(resource) {
     <article class="resource">
       <div class="resource-info">
         <p class="resource-meta">${category.short} · ${areaText(resource)}</p>
-        <h3>${resource.name}</h3>
+        <${headingTag} class="resource-title"><button class="details-button" type="button" data-id="${resource.id}">${resource.name}</button></${headingTag}>
         <p class="resource-text">${resource.description}</p>
         <p class="print-only">${phoneNumbers.join(" · ")}</p>
       </div>
       <div class="resource-actions">
         ${saveButton(resource)}
-        <button class="button button-small button-secondary details-button" type="button" data-id="${resource.id}">
-          Details<span class="visually-hidden"> for ${resource.name}</span>
-        </button>
       </div>
     </article>`;
 }
@@ -451,8 +454,7 @@ function openDetails(id, opener) {
   let locations = "<li>No walk-in location. Contact them by phone.</li>";
   if (resource.locations.length > 0) {
     locations = resource.locations.map(function (location) {
-      return `<li><strong>${location.label}</strong><br>${location.address}
-        <br><a href="${directionsURL(location)}" target="_blank" rel="noopener">Get Directions<span class="visually-hidden"> (opens in a new tab)</span></a></li>`;
+      return `<li><strong>${location.label}</strong><br>${location.address}</li>`;
     }).join("");
   }
 
@@ -502,7 +504,7 @@ function openEvent(id, opener) {
   }
 
   document.getElementById("dialog-content").innerHTML = `
-    <div class="dialog-tags"><span class="badge">${event.type}</span>${endedBadge}</div>
+    <div class="dialog-tags"><span class="badge">${event.type}</span><span class="badge badge-demo">Sample event</span>${endedBadge}</div>
     <h2 id="dialog-title">${event.title}</h2>
     <p class="dialog-lead">${event.description}</p>
     <dl class="details-list">
@@ -581,11 +583,13 @@ document.addEventListener("click", function (event) {
     const saved = isFavorite(id);
 
     // Update every save button for this resource (the row and the pop-up)
+    const resource = getResource(id);
     document.querySelectorAll('.save-button[data-id="' + id + '"]').forEach(function (button) {
       button.setAttribute("aria-pressed", saved);
+      button.setAttribute("aria-label", saveLabel(resource, saved));
     });
 
-    const name = getResource(id).name;
+    const name = resource.name;
     if (saved) {
       announce("Saved " + name + ". ", '<a href="saved.html">View Saved</a>');
     } else {
@@ -598,35 +602,6 @@ document.addEventListener("click", function (event) {
     }
   }
 });
-
-
-/* ---------- 11. Fade-in on scroll ---------- */
-// Sections with the class "reveal" fade in when you scroll to them.
-// This is skipped if the device asks for reduced motion.
-function setupReveal() {
-  const items = document.querySelectorAll(".reveal");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    items.forEach(function (item) {
-      item.classList.add("is-visible");
-    });
-    return;
-  }
-
-  const observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  });
-
-  items.forEach(function (item) {
-    observer.observe(item);
-  });
-}
 
 
 /* ---------- 12. Filling in dropdown menus ---------- */
@@ -655,7 +630,6 @@ setupA11yPanel();
 markCurrentPage();
 setupDialog();
 updateSavedCount();
-setupReveal();
 
 document.querySelectorAll(".js-year").forEach(function (element) {
   element.textContent = new Date().getFullYear();

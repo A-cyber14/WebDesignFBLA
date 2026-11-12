@@ -17,6 +17,7 @@ const resultsNote = document.getElementById("results-note");
 const noResults = document.getElementById("no-results");
 const activeList = document.getElementById("active-filters");
 const resetButton = document.getElementById("reset-button");
+let statusTimer = null;
 
 
 /* ---------- 1. Does a resource match the filters? ---------- */
@@ -66,15 +67,22 @@ function showResults() {
 
   let html = "";
   matches.forEach(function (resource) {
-    html += createResourceCard(resource);
+    html += createResourceCard(resource, "h2");
   });
   resultsList.innerHTML = html;
 
-  if (matches.length === 1) {
-    resultsCount.textContent = "1 resource found";
+  if (matches.length === resources.length) {
+    resultsCount.textContent = "Showing all " + resources.length + " sample resources";
   } else {
-    resultsCount.textContent = matches.length + " resources found";
+    resultsCount.textContent = "Showing " + matches.length + " of " + resources.length + " sample resources";
   }
+
+  // Tell screen readers the new count, but wait until typing pauses
+  // so they don't hear a new number after every letter.
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(function () {
+    document.getElementById("results-status").textContent = resultsCount.textContent;
+  }, 700);
 
   if (citySelect.value === "all") {
     resultsNote.textContent = "";

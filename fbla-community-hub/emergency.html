@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=13">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -28,16 +28,14 @@
       </nav>
       <div class="header-actions">
         <a class="saved-link" href="saved.html"><span data-icon="bookmark"></span>Saved<span id="saved-count" class="count-badge" hidden>0</span></a>
-        <button id="menu-button" class="icon-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer" aria-label="Open menu"><span data-icon="menu"></span></button>
+        <button id="menu-button" class="more-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer"><span data-icon="menu"></span><span class="more-label">More</span></button>
       </div>
     </div>
   </header>
 
   <main id="main">
     <div class="container page-intro">
-      <p class="eyebrow">Official Information</p>
       <h1>Hurricane &amp; Emergency</h1>
-      <p class="lead">The numbers to call and the steps to take, from official sources only.</p>
     </div>
 
     <section class="container" aria-labelledby="call-heading">
@@ -53,7 +51,7 @@
     <section class="section" aria-labelledby="actions-heading">
       <div class="container">
         <div class="section-intro">
-          <h2 id="actions-heading">Before a Storm, Do These Four Things</h2>
+          <h2 id="actions-heading">Before a Storm</h2>
         </div>
         <div class="steps">
           <a class="step" href="https://kyz.pinellascounty.org" target="_blank" rel="noopener">
@@ -62,7 +60,7 @@
           </a>
           <a class="step" href="https://pinellas.gov/emergency-information/public-shelters/" target="_blank" rel="noopener">
             <span class="step-number" aria-hidden="true">2</span>
-            <strong>Find a Shelter</strong><span>General, pet-friendly, and special needs. They open storm by storm.</span><span class="source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
+            <strong>Find a Shelter</strong><span>General, pet-friendly, and special needs. Check which shelters are open.</span><span class="source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
           </a>
           <a class="step" href="https://pinellas.gov/hurricane-guide/" target="_blank" rel="noopener">
             <span class="step-number" aria-hidden="true">3</span>
@@ -70,7 +68,7 @@
           </a>
           <a class="step" href="https://pinellas.gov/alert-pinellas/" target="_blank" rel="noopener">
             <span class="step-number" aria-hidden="true">4</span>
-            <strong>Get Alerts</strong><span>Free Alert Pinellas texts, calls, and emails.</span><span class="source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
+            <strong>Get Alerts</strong><span>Free Alert Pinellas texts, calls, and emails. This site has no live alerts.</span><span class="source">pinellas.gov<span class="visually-hidden"> (opens in a new tab)</span></span>
           </a>
         </div>
       </div>
@@ -81,16 +79,12 @@
         <img src="images/hurricane-milton-noaa.jpg" alt="Satellite image of Hurricane Milton over the Gulf of Mexico, approaching Florida's west coast" width="1400" height="775" loading="lazy">
         <figcaption class="caption">Hurricane Milton, Oct. 8, 2024. Image: <a href="https://commons.wikimedia.org/wiki/File:Hurricane_Milton_Eyes_Florida_(CIRA_2024-10-08_-_2024010082220_g16_fd_geocolor_milton-eyes-florida_labels).png" target="_blank" rel="noopener">NOAA and CSU/CIRA</a>, public domain.</figcaption>
       </figure>
-      <div class="notice" style="margin-top:32px">
-        <span data-icon="info"></span>
-        <p><strong>This site has no live alerts.</strong> During a storm, follow Pinellas County Emergency Management and the National Weather Service.</p>
-      </div>
     </section>
 
     <section class="section" aria-labelledby="links-heading">
       <div class="container">
         <div class="section-intro">
-          <h2 id="links-heading">More Official Links</h2>
+          <h2 id="links-heading">More Emergency Resources</h2>
         </div>
         <div class="link-columns">
           <div>
@@ -145,13 +139,13 @@
     </div>
   </dialog>
 
-  <dialog id="menu-drawer" class="drawer" aria-label="Menu">
+  <dialog id="menu-drawer" class="drawer" aria-label="More pages">
     <div class="drawer-inner">
       <div class="drawer-head">
-        <p>Menu</p>
-        <button class="icon-button" type="button" data-close-dialog aria-label="Close menu"><span data-icon="close"></span></button>
+        <p>More</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close"><span data-icon="close"></span></button>
       </div>
-      <nav aria-label="Menu">
+      <nav aria-label="More pages">
         <ul>
           <li><a href="about.html">About</a></li>
           <li><a href="about.html#sources">Sources &amp; Credits</a></li>
@@ -161,7 +155,7 @@
     </div>
   </dialog>
 
-  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options"><span data-icon="disability"></span></button>
+  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility settings"><span data-icon="disability"></span></button>
   <dialog id="a11y-panel" class="a11y-panel" aria-labelledby="a11y-title">
     <div class="drawer-inner">
       <div class="drawer-head">
@@ -185,7 +179,7 @@
       <div class="footer-inner">
         <div>
           <p class="footer-logo">Pinellas Connect</p>
-          <p>Local help across Pinellas County, Florida.</p>
+          <p>Independent FBLA student project.</p>
         </div>
         <nav aria-label="Footer">
           <ul class="footer-links">
@@ -203,13 +197,13 @@
       </div>
       <div class="footer-bottom">
         <p>In an emergency, call <a href="tel:911">911</a>. For local help, call <a href="tel:211">211</a>.</p>
-        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect. Not affiliated with Pinellas County Government.</p>
       </div>
     </div>
   </footer>
 
-  <script src="js/data.js?v=7"></script>
-  <script src="js/main.js?v=7"></script>
+  <script src="js/data.js?v=13"></script>
+  <script src="js/main.js?v=13"></script>
 
 </body>
 </html>

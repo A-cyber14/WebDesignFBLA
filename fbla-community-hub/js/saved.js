@@ -12,7 +12,7 @@ function showSaved() {
 
   let html = "";
   favorites.forEach(function (id) {
-    html += createResourceCard(getResource(id));
+    html += createResourceCard(getResource(id), "h2");
   });
   savedList.innerHTML = html;
 
@@ -20,9 +20,9 @@ function showSaved() {
   savedTools.hidden = favorites.length === 0;
 
   if (favorites.length === 1) {
-    document.getElementById("saved-total").textContent = "1 resource";
+    document.getElementById("saved-total").textContent = "1 saved sample resource";
   } else {
-    document.getElementById("saved-total").textContent = favorites.length + " resources";
+    document.getElementById("saved-total").textContent = favorites.length + " saved sample resources";
   }
 }
 
