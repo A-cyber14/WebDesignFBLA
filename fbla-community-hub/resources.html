@@ -3,110 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Search verified Pinellas County resources by category, city, and cost.">
+  <meta name="description" content="Search community resources in Pinellas County by category, city, and cost.">
   <meta name="theme-color" content="#ffffff">
   <title>Resources | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=7">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
+
 
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28">Pinellas Connect</a>
       <nav class="nav-links" aria-label="Main">
+        <a href="index.html">Home</a>
         <a href="resources.html">Resources</a>
         <a href="map.html">Map</a>
         <a href="events.html">Events</a>
         <a class="nav-emergency" href="emergency.html">Emergency</a>
       </nav>
       <div class="header-actions">
-        <a class="icon-button" href="saved.html"><span data-icon="heart"></span><span class="visually-hidden">Saved resources</span><span id="saved-count" class="count-badge" hidden>0</span></a>
-        <button id="menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span data-icon="menu"></span></button>
+        <a class="saved-link" href="saved.html"><span data-icon="bookmark"></span>Saved<span id="saved-count" class="count-badge" hidden>0</span></a>
+        <button id="menu-button" class="icon-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer" aria-label="Open menu"><span data-icon="menu"></span></button>
       </div>
-    </div>
-    <div id="menu-panel" class="menu-panel" hidden>
-      <nav class="container" aria-label="Menu">
-        <ul>
-          <li class="menu-primary"><a href="resources.html">Resources</a></li>
-          <li class="menu-primary"><a href="map.html">Map</a></li>
-          <li class="menu-primary"><a href="events.html">Events</a></li>
-          <li class="menu-primary"><a class="nav-emergency" href="emergency.html">Hurricane &amp; Emergency</a></li>
-          <li><a href="saved.html">Saved</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <div class="menu-footer">
-          <button id="text-size-button" class="button button-small button-secondary" type="button" aria-pressed="false">Larger text</button>
-        </div>
-      </nav>
     </div>
   </header>
 
   <main id="main">
-    <div class="container">
-      <div class="page-head">
-        <h1>Resources</h1>
-        <p>Find local support, fast.</p>
-      </div>
+    <div class="container page-intro" style="padding-bottom:20px">
+      <h1>Resources</h1>
+      <p class="lead">Find local support, fast.</p>
+    </div>
 
-      <form id="filter-form" role="search" aria-label="Search and filter resources">
-        <div class="search-bar" style="margin-bottom:32px">
+    <div class="directory-tools">
+      <form id="filter-form" class="container" role="search" aria-label="Search and filter resources">
+        <div class="search-bar">
           <span data-icon="search"></span>
           <label class="visually-hidden" for="search">Search resources</label>
-          <input id="search" type="search" placeholder="Search by need, name, or place" autocomplete="off">
+          <input id="search" type="search" placeholder="Search by need, name, or city" autocomplete="off">
         </div>
-
-        <div class="directory">
-          <div>
-            <button id="filter-toggle" class="button button-secondary filter-toggle" type="button" aria-expanded="false" aria-controls="filters">Filters</button>
-            <div id="filters" class="filters">
-              <fieldset>
-                <legend>Category</legend>
-                <div id="category-options" class="radio-list"></div>
-              </fieldset>
-              <div class="field">
-                <label for="city">City</label>
-                <select id="city" data-fill="cities">
-                  <option value="all">All of Pinellas</option>
-                </select>
-              </div>
-              <fieldset>
-                <legend>More filters</legend>
-                <label class="check"><input id="free-only" type="checkbox"> Free only</label>
-                <label class="check"><input id="countywide-only" type="checkbox"> Serves all of Pinellas</label>
-                <label class="check"><input id="urgent-only" type="checkbox"> 24/7 crisis lines</label>
-              </fieldset>
-              <button id="reset-button" class="text-button" type="button">Clear filters</button>
-            </div>
+        <div class="toolbar">
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category" data-fill="categories">
+              <option value="all">All Categories</option>
+            </select>
           </div>
-
-          <div>
-            <div class="results-bar">
-              <p id="results-count" class="results-count" aria-live="polite"></p>
-              <div>
-                <label class="visually-hidden" for="sort">Sort</label>
-                <select id="sort">
-                  <option value="az">A to Z</option>
-                  <option value="urgent">Crisis lines first</option>
-                </select>
-              </div>
-            </div>
-            <p id="results-note" class="muted" style="margin:-8px 0 20px;font-size:.875rem"></p>
-            <div id="results" class="grid"></div>
-            <div id="no-results" class="empty-state" hidden>
-              <span data-icon="search"></span>
-              <h2>No matches</h2>
-              <p>Try fewer words or clear filters. You can also call <a href="tel:211">211</a> for help any time.</p>
-              <button id="reset-button-2" class="button" type="button">Clear filters</button>
-            </div>
+          <div class="field">
+            <label for="city">City</label>
+            <select id="city" data-fill="cities">
+              <option value="all">All of Pinellas</option>
+            </select>
           </div>
+          <details id="more-filters" class="more-filters">
+            <summary>More Filters<span id="more-count"></span></summary>
+            <div class="more-filters-body">
+              <label class="check"><input id="free-only" type="checkbox"> Free Only</label>
+              <label class="check"><input id="countywide-only" type="checkbox"> Serves All of Pinellas</label>
+            </div>
+          </details>
         </div>
       </form>
+    </div>
+
+    <div class="container" style="padding-bottom:var(--space)">
+      <div class="results-bar">
+        <p id="results-count" class="results-count" aria-live="polite"></p>
+        <ul id="active-filters" class="active-filters" aria-label="Active filters"></ul>
+        <div class="results-tools">
+          <button id="reset-button" class="text-button" type="button" hidden>Reset All</button>
+        </div>
+      </div>
+      <p id="results-note" class="results-note"></p>
+      <div id="results" class="resource-list"></div>
+      <div id="no-results" class="empty-state" hidden>
+        <span data-icon="search"></span>
+        <h2>No Matches</h2>
+        <p>Try fewer words or reset filters. For real help, call <a href="tel:211">211</a>.</p>
+        <button id="reset-button-2" class="button" type="button">Reset All</button>
+      </div>
     </div>
   </main>
 
@@ -114,6 +93,41 @@
     <div class="dialog-inner">
       <button id="close-dialog" class="icon-button close-button" type="button" aria-label="Close details"><span data-icon="close"></span></button>
       <div id="dialog-content"></div>
+    </div>
+  </dialog>
+
+  <dialog id="menu-drawer" class="drawer" aria-label="Menu">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <p>Menu</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close menu"><span data-icon="close"></span></button>
+      </div>
+      <nav aria-label="Menu">
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </dialog>
+
+  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options"><span data-icon="disability"></span></button>
+  <dialog id="a11y-panel" class="a11y-panel" aria-labelledby="a11y-title">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <p id="a11y-title">Accessibility</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close accessibility options"><span data-icon="close"></span></button>
+      </div>
+      <label class="switch">Larger Text <input type="checkbox" data-pref="large-text"></label>
+      <label class="switch">High Contrast <input type="checkbox" data-pref="high-contrast"></label>
+      <label class="switch">Reading Highlight <input type="checkbox" data-pref="reading-highlight"></label>
+      <label class="switch">Reading Spacing <input type="checkbox" data-pref="reading-spacing"></label>
+      <div class="a11y-actions">
+        <button id="a11y-reset" class="button button-small button-secondary" type="button">Reset</button>
+        <button class="button button-small" type="button" data-close-dialog>Done</button>
+      </div>
+      <p class="muted" style="font-size:.8125rem;margin-top:12px">Saved on this device. Animations follow your system’s reduce-motion setting.</p>
     </div>
   </dialog>
 
@@ -126,6 +140,7 @@
         </div>
         <nav aria-label="Footer">
           <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
             <li><a href="resources.html">Resources</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="events.html">Events</a></li>
@@ -138,14 +153,14 @@
         </nav>
       </div>
       <div class="footer-bottom">
-        <p>In an emergency, call <a href="tel:911">911</a>. Services change, so confirm before you go.</p>
-        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</p>
+        <p>In an emergency, call <a href="tel:911">911</a>. For local help, call <a href="tel:211">211</a>.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government.</p>
       </div>
     </div>
   </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/resources.js"></script>
+  <script src="js/data.js?v=7"></script>
+  <script src="js/main.js?v=7"></script>
+  <script src="js/resources.js?v=7"></script>
 </body>
 </html>

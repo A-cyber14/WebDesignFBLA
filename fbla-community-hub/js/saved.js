@@ -1,5 +1,6 @@
 /* =========================================================
-   saved.js: shows the resources the user has saved.
+   saved.js
+   The Saved page: shows the resources you saved.
    ========================================================= */
 
 const savedList = document.getElementById("saved-list");
@@ -8,10 +9,21 @@ const savedTools = document.getElementById("saved-tools");
 
 function showSaved() {
   const favorites = getFavorites();
-  savedList.innerHTML = favorites.map(getResource).map(createResourceCard).join("");
+
+  let html = "";
+  favorites.forEach(function (id) {
+    html += createResourceCard(getResource(id));
+  });
+  savedList.innerHTML = html;
+
   emptyMessage.hidden = favorites.length > 0;
   savedTools.hidden = favorites.length === 0;
-  document.getElementById("saved-total").textContent = favorites.length + (favorites.length === 1 ? " resource" : " resources");
+
+  if (favorites.length === 1) {
+    document.getElementById("saved-total").textContent = "1 resource";
+  } else {
+    document.getElementById("saved-total").textContent = favorites.length + " resources";
+  }
 }
 
 // main.js calls this after a Save button is clicked

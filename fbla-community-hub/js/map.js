@@ -1,9 +1,8 @@
 /* =========================================================
-   map.js — The interactive Resource Map.
-   Shows ONLY verified physical locations from data.js. Each
-   place gets one pin; places shared by several organizations
-   show a number on the pin. The list view shows exactly the same
-   results for keyboard, screen reader, and offline users.
+   map.js
+   The Map page. Every location gets a pin. The list next
+   to the map shows the same places, so people who can't use the
+   map (keyboard, screen reader, or offline) still get everything.
    ========================================================= */
 
 const mapApp = document.getElementById("map-app");
@@ -16,212 +15,249 @@ const mapExtra = document.getElementById("map-extra");
 const preview = document.getElementById("map-preview");
 const previewBody = document.getElementById("preview-body");
 
-const mapReady = typeof L !== "undefined";
+// Leaflet (the map library) loads from the internet. If it didn't load,
+// "L" won't exist and we show the list instead.
+const mapLoaded = typeof L !== "undefined";
 let map = null;
-let markerLayer = null;
-let markersByKey = {};
-
-function placeKey(location) {
-  return location.lat.toFixed(5) + "," + location.lng.toFixed(5);
-}
+let pinLayer = null;
+let pins = [];          // pins[i] is the pin for shownPlaces[i]
+let shownPlaces = [];   // the places that match the filters right now
 
 
-/* ---------- 1. Which locations pass the filters? ---------- */
-function filteredLocations() {
-  const text = mapSearch.value.trim().toLowerCase();
-  const categoryId = mapCategory.value;
+/* ---------- 1. Which places match the filters? ---------- */
+function getMatchingPlaces() {
+  const searchText = mapSearch.value.trim().toLowerCase();
+  const category = mapCategory.value;
   const city = mapCity.value;
 
-  return allLocations().filter(function (item) {
-    const r = item.resource;
-    const haystack = (r.name + " " + r.description + " " + item.location.label + " " + item.location.address).toLowerCase();
-    return (!text || haystack.includes(text)) &&
-           (categoryId === "all" || r.categories.includes(categoryId)) &&
-           (city === "all" || item.location.city === city);
+  return allLocations().filter(function (place) {
+    const resource = place.resource;
+    const text = (resource.name + " " + resource.description + " " + place.location.address).toLowerCase();
+
+    const matchesSearch = searchText === "" || text.includes(searchText);
+    const matchesCategory = category === "all" || resource.categories.includes(category);
+    const matchesCity = city === "all" || place.location.city === city;
+    return matchesSearch && matchesCategory && matchesCity;
   });
 }
 
-// Groups locations that share the exact same coordinates.
-function groupByPlace(items) {
-  const groups = {};
-  items.forEach(function (item) {
-    const key = placeKey(item.location);
-    if (!groups[key]) groups[key] = { key: key, location: item.location, items: [] };
-    groups[key].items.push(item);
-  });
-  return Object.values(groups);
-}
 
+/* ---------- 2. The card that opens when you pick a place ---------- */
+function showPreview(index) {
+  const place = shownPlaces[index];
+  const resource = place.resource;
+  const category = getCategory(resource.categories[0]);
+  const phone = resource.phones[0].number;
 
-/* ---------- 2. Preview card ---------- */
-function showPreview(group) {
-  previewBody.innerHTML = group.items.map(function (item) {
-    const r = item.resource;
-    const category = getCategory(r.categories[0]);
-    const phone = item.location.phone || r.phones[0].number;
-    return `
-      <div class="preview-item">
-        <span class="badge">${category.short}</span>
-        <h3>${r.name}</h3>
-        <p><strong>${item.location.label}</strong><br>${item.location.address}</p>
-        <p>${item.location.hours || r.hours}</p>
-        <div class="preview-actions">
-          <a class="button button-small" href="${directionsURL(item.location.address)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${r.name} (opens in a new tab)</span></a>
-          <a class="button button-small button-secondary" href="${telHref(phone)}">Call</a>
-          <button class="button button-small button-secondary details-button" type="button" data-id="${r.id}">Details</button>
-        </div>
-      </div>`;
-  }).join("");
+  previewBody.innerHTML = `
+    <div class="preview-item">
+      <span class="badge">${category.short}</span>
+      <h3>${resource.name}</h3>
+      <p><strong>${place.location.label}</strong><br>${place.location.address}</p>
+      <p>${resource.hours}</p>
+      <div class="preview-actions">
+        <a class="button button-small" href="${directionsURL(place.location)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${resource.name} (opens in a new tab)</span></a>
+        <a class="button button-small button-secondary" href="${telHref(phone)}">Call</a>
+        <button class="button button-small button-secondary details-button" type="button" data-id="${resource.id}">Details</button>
+      </div>
+    </div>`;
   preview.hidden = false;
 
-  document.querySelectorAll(".pin.is-active").forEach(function (p) { p.classList.remove("is-active"); });
-  const marker = markersByKey[group.key];
-  if (marker && marker.getElement()) marker.getElement().querySelector(".pin").classList.add("is-active");
-
-  document.querySelectorAll(".map-list-item").forEach(function (li) {
-    li.classList.toggle("is-active", li.dataset.key === group.key);
+  // Highlight the matching pin and list item
+  document.querySelectorAll(".pin.is-active").forEach(function (pin) {
+    pin.classList.remove("is-active");
+  });
+  if (pins[index] && pins[index].getElement()) {
+    pins[index].getElement().querySelector(".pin").classList.add("is-active");
+  }
+  document.querySelectorAll(".map-list-item").forEach(function (item) {
+    item.classList.toggle("is-active", item.dataset.index === String(index));
   });
 }
 
 document.getElementById("preview-close").addEventListener("click", function () {
   preview.hidden = true;
-  document.querySelectorAll(".pin.is-active").forEach(function (p) { p.classList.remove("is-active"); });
+  document.querySelectorAll(".pin.is-active").forEach(function (pin) {
+    pin.classList.remove("is-active");
+  });
 });
 
 
-/* ---------- 3. Draw everything ---------- */
+/* ---------- 3. Draw the list and the pins ---------- */
 function render() {
-  const items = filteredLocations();
-  const groups = groupByPlace(items);
-  const city = mapCity.value;
+  shownPlaces = getMatchingPlaces();
 
-  // List view (always built — it is the accessible alternative)
-  mapList.innerHTML = items.map(function (item) {
-    const r = item.resource;
-    const category = getCategory(r.categories[0]);
-    return `
-      <li class="map-list-item" data-key="${placeKey(item.location)}">
-        <div>
-          <p>${category.short}</p>
-          <h3>${r.name}</h3>
-          <p>${item.location.address}</p>
-          <div class="map-list-actions">
-            ${mapReady ? `<button type="button" data-show="${placeKey(item.location)}">Show on map<span class="visually-hidden">: ${r.name}</span></button>` : ""}
-            <a href="${directionsURL(item.location.address)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${r.name} (opens in a new tab)</span></a>
-            <button type="button" class="details-button" data-id="${r.id}">Details<span class="visually-hidden"> for ${r.name}</span></button>
-          </div>
+  // The list
+  let listHTML = "";
+  shownPlaces.forEach(function (place, index) {
+    const resource = place.resource;
+    const category = getCategory(resource.categories[0]);
+
+    let showOnMapButton = "";
+    if (mapLoaded) {
+      showOnMapButton = `<button type="button" data-show="${index}">Show on Map<span class="visually-hidden">: ${resource.name}</span></button>`;
+    }
+
+    listHTML += `
+      <li class="map-list-item" data-index="${index}">
+        <p>${category.short}</p>
+        <h3>${resource.name}</h3>
+        <p>${place.location.address}</p>
+        <div class="map-list-actions">
+          ${showOnMapButton}
+          <a href="${directionsURL(place.location)}" target="_blank" rel="noopener">Directions<span class="visually-hidden"> to ${resource.name} (opens in a new tab)</span></a>
+          <button type="button" class="details-button" data-id="${resource.id}">Details<span class="visually-hidden"> for ${resource.name}</span></button>
         </div>
       </li>`;
-  }).join("") || `<li class="empty-state"><p>No mapped places match.</p></li>`;
+  });
+  if (shownPlaces.length === 0) {
+    listHTML = '<li class="empty-state"><p>No mapped places match.</p></li>';
+  }
+  mapList.innerHTML = listHTML;
 
-  mapCount.textContent = `${items.length} ${items.length === 1 ? "location" : "locations"}`;
+  if (shownPlaces.length === 1) {
+    mapCount.textContent = "1 location";
+  } else {
+    mapCount.textContent = shownPlaces.length + " locations";
+  }
 
-  // Services with no walk-in location still serve residents
-  const categoryId = mapCategory.value;
-  const remote = resources.filter(function (r) {
-    return r.locations.length === 0 && r.area === "countywide" &&
-           (categoryId === "all" || r.categories.includes(categoryId));
-  }).length;
-  const cityParam = city !== "all" ? "&city=" + encodeURIComponent(city) : "";
-  const catParam = categoryId !== "all" ? "category=" + categoryId : "";
-  mapExtra.innerHTML = remote
-    ? `+ ${remote} countywide ${remote === 1 ? "service" : "services"} by phone or online. <a href="resources.html?${catParam}${cityParam}">See all</a>`
-    : "";
+  // Some services have no building (you call them), so they aren't on the map.
+  // We mention them under the list.
+  const phoneOnly = resources.filter(function (resource) {
+    const matchesCategory = mapCategory.value === "all" || resource.categories.includes(mapCategory.value);
+    return resource.locations.length === 0 && matchesCategory;
+  });
+  if (phoneOnly.length > 0) {
+    mapExtra.innerHTML = "Plus " + phoneOnly.length + " countywide services by phone. " +
+      '<a href="resources.html">See All Resources</a>';
+  } else {
+    mapExtra.innerHTML = "";
+  }
 
-  // Pins
-  if (!mapReady) return;
-  markerLayer.clearLayers();
-  markersByKey = {};
+  // The pins
+  if (!mapLoaded) {
+    return;
+  }
+  pinLayer.clearLayers();
+  pins = [];
   preview.hidden = true;
 
-  groups.forEach(function (group) {
-    const category = getCategory(group.items[0].resource.categories[0]);
-    const names = group.items.map(function (i) { return i.resource.name; }).join("; ");
-    const marker = L.marker([group.location.lat, group.location.lng], {
-      icon: pinIcon(category, group.items.length),
-      title: names,
-      alt: names,
-      riseOnHover: true
+  shownPlaces.forEach(function (place, index) {
+    const category = getCategory(place.resource.categories[0]);
+    const pin = L.marker([place.location.lat, place.location.lng], {
+      icon: pinIcon(category),
+      title: place.resource.name,
+      alt: place.resource.name
     });
-    marker.on("click", function () { showPreview(group); });
-    marker.on("keypress", function (e) { if (e.originalEvent.key === "Enter") showPreview(group); });
-    marker.addTo(markerLayer);
-    markersByKey[group.key] = marker;
+    pin.on("click", function () {
+      showPreview(index);
+    });
+    pin.on("keypress", function (event) {
+      if (event.originalEvent.key === "Enter") {
+        showPreview(index);
+      }
+    });
+    pin.addTo(pinLayer);
+    pins.push(pin);
   });
 
-  if (groups.length) {
-    map.fitBounds(markerLayer.getBounds(), { padding: [50, 50], maxZoom: 15 });
+  // Zoom the map to fit all the pins
+  if (shownPlaces.length > 0) {
+    map.fitBounds(pinLayer.getBounds(), { padding: [50, 50], maxZoom: 15 });
   }
 }
 
 
-// Called by maptools.js if map tiles can't load: show the notice
-// and switch to the list, which has every location.
+/* ---------- 4. If the map can't load, show the list ---------- */
+function showListInstead() {
+  document.getElementById("map-fallback").hidden = false;
+  document.getElementById("map-offline").hidden = false;
+  switchView("list");
+}
+
+// maptools.js calls this if the map pictures (tiles) fail to load
 function onTilesFailed() {
-  document.getElementById("map-fallback").hidden = false;
-  document.querySelector('[data-view-button="list"]').click();
+  showListInstead();
 }
 
 
-/* ---------- 4. Map setup (only if Leaflet loaded) ---------- */
-if (mapReady) {
-  map = L.map("map", { zoomControl: true, scrollWheelZoom: true });
-  addBaseTiles(map);
-  markerLayer = L.featureGroup().addTo(map);
-  map.setView([27.9, -82.73], 10); // Pinellas County
-  document.getElementById("map-fallback").hidden = true;
-} else {
-  // Offline or blocked: switch to the list and explain why
-  mapApp.dataset.view = "list";
-  document.getElementById("map-fallback").hidden = false;
-  document.querySelectorAll("[data-view-button]").forEach(function (b) {
-    b.setAttribute("aria-pressed", b.dataset.viewButton === "list");
+/* ---------- 5. Map / List switch (phones and tablets) ---------- */
+function switchView(view) {
+  mapApp.dataset.view = view;
+  document.querySelectorAll("[data-view-button]").forEach(function (button) {
+    button.setAttribute("aria-pressed", button.dataset.viewButton === view);
   });
+  // Leaflet needs to re-measure the map after it becomes visible again
+  if (view === "map" && map) {
+    setTimeout(function () {
+      map.invalidateSize();
+    }, 50);
+  }
 }
 
-
-/* ---------- 5. Controls ---------- */
-mapSearch.addEventListener("input", render);
-mapCategory.addEventListener("change", function () { trackEvent("filtersUsed"); render(); });
-mapCity.addEventListener("change", function () { trackEvent("filtersUsed"); render(); });
-document.getElementById("map-form").addEventListener("submit", function (e) { e.preventDefault(); });
-
-// Map / List toggle (phones and tablets)
 document.querySelectorAll("[data-view-button]").forEach(function (button) {
   button.addEventListener("click", function () {
-    const view = button.dataset.viewButton;
-    mapApp.dataset.view = view;
-    document.querySelectorAll("[data-view-button]").forEach(function (b) {
-      b.setAttribute("aria-pressed", b === button);
-    });
-    if (view === "map" && map) setTimeout(function () { map.invalidateSize(); }, 50);
+    switchView(button.dataset.viewButton);
   });
 });
 
-// "Show on map" in the list
+
+/* ---------- 6. Set up the map ---------- */
+if (mapLoaded) {
+  // Turn off zoom animations if the device is set to reduce motion
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  map = L.map("map", {
+    zoomAnimation: !reduceMotion,
+    fadeAnimation: !reduceMotion,
+    markerZoomAnimation: !reduceMotion
+  });
+  addBaseTiles(map);
+  pinLayer = L.featureGroup().addTo(map);
+  map.setView([27.9, -82.73], 10); // Pinellas County
+} else {
+  showListInstead();
+}
+
+
+/* ---------- 7. Filters and buttons ---------- */
+mapSearch.addEventListener("input", render);
+
+mapCategory.addEventListener("change", function () {
+  trackEvent("filtersUsed");
+  render();
+});
+
+mapCity.addEventListener("change", function () {
+  trackEvent("filtersUsed");
+  render();
+});
+
+// Pressing Enter in the search box shouldn't reload the page
+document.getElementById("map-form").addEventListener("submit", function (event) {
+  event.preventDefault();
+});
+
+// "Show on map" buttons in the list
 mapList.addEventListener("click", function (event) {
   const button = event.target.closest("[data-show]");
-  if (!button || !map) return;
-  const group = groupByPlace(filteredLocations()).find(function (g) { return g.key === button.dataset.show; });
-  if (!group) return;
-  if (mapApp.dataset.view === "list" && window.matchMedia("(max-width: 1023px)").matches) {
-    document.querySelector('[data-view-button="map"]').click();
+  if (!button || !map) {
+    return;
   }
-  map.setView([group.location.lat, group.location.lng], 15);
-  showPreview(group);
-  document.getElementById("map").focus();
+  const index = Number(button.dataset.show);
+  const place = shownPlaces[index];
+
+  switchView("map");
+  map.setView([place.location.lat, place.location.lng], 15);
+  showPreview(index);
 });
 
-// Read ?category= and ?city= from the address
+// Links like map.html?city=Largo open the map already filtered
 const mapParams = new URLSearchParams(window.location.search);
-if (getCategory(mapParams.get("category"))) mapCategory.value = mapParams.get("category");
-if (cities.includes(mapParams.get("city"))) mapCity.value = mapParams.get("city");
+if (getCategory(mapParams.get("category"))) {
+  mapCategory.value = mapParams.get("category");
+}
+if (cities.includes(mapParams.get("city"))) {
+  mapCity.value = mapParams.get("city");
+}
 
 render();
-
-// Re-measure once fonts and layout have settled, then re-center on the pins
-window.addEventListener("load", function () {
-  if (!map) return;
-  map.invalidateSize();
-  if (markerLayer.getLayers().length) map.fitBounds(markerLayer.getBounds(), { padding: [50, 50], maxZoom: 15 });
-});

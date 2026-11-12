@@ -1,5 +1,7 @@
 /* =========================================================
-   about.js — Success metrics demo + the full list of data sources.
+   about.js
+   Shows the success metrics counted in this browser
+   (in "Live counts from this browser" on the About page).
    ========================================================= */
 
 const metricLabels = {
@@ -15,20 +17,43 @@ const metricLabels = {
   feedbackSent: "Contact forms sent"
 };
 
+// Turns 3 out of 10 into "30%". Shows a dash if there's nothing to count.
+function percent(part, total) {
+  if (total === 0) {
+    return "—";
+  }
+  return Math.round(part / total * 100) + "%";
+}
+
 function showMetrics() {
   const metrics = storageGet("metrics", {});
+
+  // The table of counts
   let rows = "";
   for (const key in metricLabels) {
     rows += `<tr><th scope="row">${metricLabels[key]}</th><td>${metrics[key] || 0}</td></tr>`;
   }
   document.getElementById("metrics-body").innerHTML = rows;
 
+  // Zero-result rate and helpful rating
   const searches = metrics.searches || 0;
-  const votes = (metrics.helpfulYes || 0) + (metrics.helpfulNo || 0);
-  document.getElementById("zero-rate").textContent =
-    searches ? Math.round((metrics.searchesWithNoResults || 0) / searches * 100) + "%" : "—";
-  document.getElementById("helpful-rate").textContent =
-    votes ? Math.round((metrics.helpfulYes || 0) / votes * 100) + "%" : "—";
+  const noResults = metrics.searchesWithNoResults || 0;
+  const yesVotes = metrics.helpfulYes || 0;
+  const allVotes = yesVotes + (metrics.helpfulNo || 0);
+  document.getElementById("zero-rate").textContent = percent(noResults, searches);
+  document.getElementById("helpful-rate").textContent = percent(yesVotes, allVotes);
+
+  // Median (middle) time to resource
+  const times = (metrics.timeToResource || []).slice();
+  times.sort(function (a, b) {
+    return a - b;
+  });
+  if (times.length === 0) {
+    document.getElementById("time-to-resource").textContent = "—";
+  } else {
+    const middle = times[Math.floor(times.length / 2)];
+    document.getElementById("time-to-resource").textContent = middle + " s (" + times.length + " sessions)";
+  }
 }
 
 document.getElementById("reset-metrics").addEventListener("click", function () {
@@ -37,23 +62,3 @@ document.getElementById("reset-metrics").addEventListener("click", function () {
 });
 
 showMetrics();
-
-
-document.getElementById("source-count").textContent = resources.length;
-
-// Data sources: one row per listing, built from data.js so it can never drift
-document.getElementById("data-sources").innerHTML = resources
-  .slice()
-  .sort(function (a, b) { return a.name.localeCompare(b.name); })
-  .map(function (r) {
-    return `<tr><th scope="row">${r.name}</th>
-      <td><a href="${r.source}" target="_blank" rel="noopener">${r.source.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}</a></td>
-      <td>${formatVerified(r.verified)}</td></tr>`;
-  }).join("");
-
-document.getElementById("event-sources").innerHTML = events
-  .map(function (e) {
-    return `<tr><th scope="row">${e.title}</th>
-      <td><a href="${e.source}" target="_blank" rel="noopener">${e.organizer}</a></td>
-      <td>${formatVerified(LAST_VERIFIED)}</td></tr>`;
-  }).join("");

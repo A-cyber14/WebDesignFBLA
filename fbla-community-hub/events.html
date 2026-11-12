@@ -3,61 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Verified upcoming community events in Pinellas County.">
+  <meta name="description" content="Upcoming community events in Pinellas County.">
   <meta name="theme-color" content="#ffffff">
   <title>Events | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=7">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
+
 
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28">Pinellas Connect</a>
       <nav class="nav-links" aria-label="Main">
+        <a href="index.html">Home</a>
         <a href="resources.html">Resources</a>
         <a href="map.html">Map</a>
         <a href="events.html">Events</a>
         <a class="nav-emergency" href="emergency.html">Emergency</a>
       </nav>
       <div class="header-actions">
-        <a class="icon-button" href="saved.html"><span data-icon="heart"></span><span class="visually-hidden">Saved resources</span><span id="saved-count" class="count-badge" hidden>0</span></a>
-        <button id="menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span data-icon="menu"></span></button>
+        <a class="saved-link" href="saved.html"><span data-icon="bookmark"></span>Saved<span id="saved-count" class="count-badge" hidden>0</span></a>
+        <button id="menu-button" class="icon-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer" aria-label="Open menu"><span data-icon="menu"></span></button>
       </div>
-    </div>
-    <div id="menu-panel" class="menu-panel" hidden>
-      <nav class="container" aria-label="Menu">
-        <ul>
-          <li class="menu-primary"><a href="resources.html">Resources</a></li>
-          <li class="menu-primary"><a href="map.html">Map</a></li>
-          <li class="menu-primary"><a href="events.html">Events</a></li>
-          <li class="menu-primary"><a class="nav-emergency" href="emergency.html">Hurricane &amp; Emergency</a></li>
-          <li><a href="saved.html">Saved</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <div class="menu-footer">
-          <button id="text-size-button" class="button button-small button-secondary" type="button" aria-pressed="false">Larger text</button>
-        </div>
-      </nav>
     </div>
   </header>
 
   <main id="main">
-    <div class="container">
-      <div class="page-head">
-        <h1>Events</h1>
-        <p>Discover events near you.</p>
-      </div>
+    <div class="container page-intro">
+      <h1>Events</h1>
+      <p class="lead">Free community events across the county.</p>
+    </div>
 
+    <div class="container" style="padding-bottom:var(--space)">
       <form class="filter-row" aria-label="Filter events" onsubmit="return false">
         <div class="field">
           <label for="event-type">Type</label>
-          <select id="event-type"><option value="all">All types</option></select>
+          <select id="event-type"><option value="all">All Types</option></select>
         </div>
         <div class="field">
           <label for="event-city">City</label>
@@ -65,15 +51,13 @@
         </div>
       </form>
 
-      <p id="event-count" class="results-count" aria-live="polite" style="margin-bottom:16px"></p>
-      <div id="event-list" class="event-list"></div>
+      <p id="event-count" class="results-count" aria-live="polite" style="margin-top:28px"></p>
+      <div id="event-list"></div>
       <div id="no-events" hidden></div>
-
-      <section class="section" style="padding-bottom:var(--space)" aria-labelledby="calendars-heading">
-        <h2 id="calendars-heading" style="font-size:1.25rem;margin-bottom:6px">Official calendars</h2>
-        <p class="muted" style="margin-bottom:16px">We list only verified events. Find more here.</p>
-        <ul id="official-calendars" class="side-info"></ul>
-      </section>
+      <details id="past-events" class="past-events">
+        <summary>Past Events (<span id="past-count">0</span>)</summary>
+        <div id="past-list"></div>
+      </details>
     </div>
   </main>
 
@@ -81,6 +65,41 @@
     <div class="dialog-inner">
       <button id="close-dialog" class="icon-button close-button" type="button" aria-label="Close details"><span data-icon="close"></span></button>
       <div id="dialog-content"></div>
+    </div>
+  </dialog>
+
+  <dialog id="menu-drawer" class="drawer" aria-label="Menu">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <p>Menu</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close menu"><span data-icon="close"></span></button>
+      </div>
+      <nav aria-label="Menu">
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </dialog>
+
+  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options"><span data-icon="disability"></span></button>
+  <dialog id="a11y-panel" class="a11y-panel" aria-labelledby="a11y-title">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <p id="a11y-title">Accessibility</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close accessibility options"><span data-icon="close"></span></button>
+      </div>
+      <label class="switch">Larger Text <input type="checkbox" data-pref="large-text"></label>
+      <label class="switch">High Contrast <input type="checkbox" data-pref="high-contrast"></label>
+      <label class="switch">Reading Highlight <input type="checkbox" data-pref="reading-highlight"></label>
+      <label class="switch">Reading Spacing <input type="checkbox" data-pref="reading-spacing"></label>
+      <div class="a11y-actions">
+        <button id="a11y-reset" class="button button-small button-secondary" type="button">Reset</button>
+        <button class="button button-small" type="button" data-close-dialog>Done</button>
+      </div>
+      <p class="muted" style="font-size:.8125rem;margin-top:12px">Saved on this device. Animations follow your system’s reduce-motion setting.</p>
     </div>
   </dialog>
 
@@ -93,6 +112,7 @@
         </div>
         <nav aria-label="Footer">
           <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
             <li><a href="resources.html">Resources</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="events.html">Events</a></li>
@@ -105,14 +125,14 @@
         </nav>
       </div>
       <div class="footer-bottom">
-        <p>In an emergency, call <a href="tel:911">911</a>. Services change, so confirm before you go.</p>
-        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</p>
+        <p>In an emergency, call <a href="tel:911">911</a>. For local help, call <a href="tel:211">211</a>.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government.</p>
       </div>
     </div>
   </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/events.js"></script>
+  <script src="js/data.js?v=7"></script>
+  <script src="js/main.js?v=7"></script>
+  <script src="js/events.js?v=7"></script>
 </body>
 </html>

@@ -1,17 +1,29 @@
 /* =========================================================
-   contact.js — Checks the contact form before it is "sent".
-   This prototype has no server, so messages are not emailed.
+   contact.js
+   Checks the contact form. The site has no server, so the
+   message isn't actually sent anywhere.
    ========================================================= */
 
 const form = document.getElementById("contact-form");
 const successBox = document.getElementById("form-success");
 
-// Shows (or clears) the error message under one form field
+// Shows an error message under a field, or clears it if message is ""
 function setError(fieldId, message) {
   const field = document.getElementById(fieldId);
-  const error = document.getElementById(fieldId + "-error");
-  error.textContent = message;
-  field.setAttribute("aria-invalid", message ? "true" : "false");
+  document.getElementById(fieldId + "-error").textContent = message;
+
+  if (message === "") {
+    field.setAttribute("aria-invalid", "false");
+  } else {
+    field.setAttribute("aria-invalid", "true");
+  }
+}
+
+// A simple email check: needs an "@" with a "." somewhere after it
+function looksLikeEmail(email) {
+  const at = email.indexOf("@");
+  const dot = email.lastIndexOf(".");
+  return at > 0 && dot > at + 1 && dot < email.length - 1 && !email.includes(" ");
 }
 
 form.addEventListener("submit", function (event) {
@@ -22,22 +34,35 @@ form.addEventListener("submit", function (event) {
   const topic = document.getElementById("topic").value;
   const message = document.getElementById("message").value.trim();
 
-  // Check each field. "valid" becomes false if anything is wrong.
   let valid = true;
 
-  setError("name", name === "" ? "Please enter your name." : "");
-  if (name === "") valid = false;
+  if (name === "") {
+    setError("name", "Please enter your name.");
+    valid = false;
+  } else {
+    setError("name", "");
+  }
 
-  // A simple email check: something@something.something
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  setError("email", emailPattern.test(email) ? "" : "Please enter a valid email address, like name@example.com.");
-  if (!emailPattern.test(email)) valid = false;
+  if (!looksLikeEmail(email)) {
+    setError("email", "Please enter a valid email address, like name@example.com.");
+    valid = false;
+  } else {
+    setError("email", "");
+  }
 
-  setError("topic", topic === "" ? "Please choose a topic." : "");
-  if (topic === "") valid = false;
+  if (topic === "") {
+    setError("topic", "Please choose a topic.");
+    valid = false;
+  } else {
+    setError("topic", "");
+  }
 
-  setError("message", message.length < 10 ? "Please write at least 10 characters." : "");
-  if (message.length < 10) valid = false;
+  if (message.length < 10) {
+    setError("message", "Please write at least 10 characters.");
+    valid = false;
+  } else {
+    setError("message", "");
+  }
 
   if (!valid) {
     // Move keyboard focus to the first field with a problem
@@ -45,15 +70,15 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  // Everything is valid: show a thank-you message
+  // Everything looks good, so show the thank-you message
   trackEvent("feedbackSent");
   form.hidden = true;
-  document.getElementById("success-name").textContent = name; // textContent is safe for user input
+  document.getElementById("success-name").textContent = name;
   successBox.hidden = false;
   successBox.focus();
 });
 
-// "Send another message" button
+// "Start over" button
 document.getElementById("send-another").addEventListener("click", function () {
   form.reset();
   form.hidden = false;

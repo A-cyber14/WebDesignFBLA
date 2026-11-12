@@ -3,123 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Why Pinellas Connect exists and how its information is verified.">
+  <meta name="description" content="Why Pinellas Connect exists, how it was designed, and how success is measured.">
   <meta name="theme-color" content="#ffffff">
   <title>About | Pinellas Connect</title>
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=7">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
+
 
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28">Pinellas Connect</a>
       <nav class="nav-links" aria-label="Main">
+        <a href="index.html">Home</a>
         <a href="resources.html">Resources</a>
         <a href="map.html">Map</a>
         <a href="events.html">Events</a>
         <a class="nav-emergency" href="emergency.html">Emergency</a>
       </nav>
       <div class="header-actions">
-        <a class="icon-button" href="saved.html"><span data-icon="heart"></span><span class="visually-hidden">Saved resources</span><span id="saved-count" class="count-badge" hidden>0</span></a>
-        <button id="menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span data-icon="menu"></span></button>
+        <a class="saved-link" href="saved.html"><span data-icon="bookmark"></span>Saved<span id="saved-count" class="count-badge" hidden>0</span></a>
+        <button id="menu-button" class="icon-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-drawer" aria-label="Open menu"><span data-icon="menu"></span></button>
       </div>
-    </div>
-    <div id="menu-panel" class="menu-panel" hidden>
-      <nav class="container" aria-label="Menu">
-        <ul>
-          <li class="menu-primary"><a href="resources.html">Resources</a></li>
-          <li class="menu-primary"><a href="map.html">Map</a></li>
-          <li class="menu-primary"><a href="events.html">Events</a></li>
-          <li class="menu-primary"><a class="nav-emergency" href="emergency.html">Hurricane &amp; Emergency</a></li>
-          <li><a href="saved.html">Saved</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <div class="menu-footer">
-          <button id="text-size-button" class="button button-small button-secondary" type="button" aria-pressed="false">Larger text</button>
-        </div>
-      </nav>
     </div>
   </header>
 
   <main id="main">
+    <div class="container page-intro">
+      <h1>About</h1>
+      <p class="lead">Pinellas Connect is one clear place to find community help. It's an FBLA Website Design project.</p>
+    </div>
+
     <div class="container" style="padding-bottom:var(--space)">
-      <div class="page-head">
-        <h1>About</h1>
-        <p>One trusted place to find help in Pinellas.</p>
-      </div>
-
-      <div class="prose">
-        <h2>Our mission</h2>
-        <p>Make every essential Pinellas County resource easy to find, understand, and trust.</p>
-
-        <h2>Why it exists</h2>
-        <p>Help in Pinellas is spread across dozens of county pages, nonprofit sites, and PDFs. Pinellas Connect puts verified services in one searchable place. When we can't answer a question, we point people to <a href="tel:211">211</a>.</p>
-
-        <h2>How information is maintained</h2>
-        <ul class="points">
-          <li>Every listing is checked against an official source and dated.</li>
-          <li>If a source doesn't state hours or costs, we say “Not listed.” We never guess.</li>
-          <li>Map pins come from geocoded street addresses, never hand placement.</li>
-          <li>Events come from official calendars and disappear after they end.</li>
-        </ul>
-        <p style="margin-top:16px">Last verified: <strong class="js-verified"></strong>. Services change, so confirm before you go.</p>
-
-        <h2 id="sources">Sources &amp; transparency</h2>
-        <p style="margin-bottom:16px">Every listing links to the official page we checked.</p>
-        <details>
-          <summary>Resource sources (<span id="source-count"></span>)</summary>
-          <div class="table-wrap">
-            <table>
-              <caption class="visually-hidden">Source page and verification date for each resource</caption>
-              <thead><tr><th scope="col">Resource</th><th scope="col">Source</th><th scope="col">Verified</th></tr></thead>
-              <tbody id="data-sources"></tbody>
-            </table>
-          </div>
-        </details>
-        <details>
-          <summary>Event sources</summary>
-          <div class="table-wrap">
-            <table>
-              <caption class="visually-hidden">Source for each event</caption>
-              <thead><tr><th scope="col">Event</th><th scope="col">Listing</th><th scope="col">Verified</th></tr></thead>
-              <tbody id="event-sources"></tbody>
-            </table>
-          </div>
-        </details>
-        <details>
-          <summary>Credits</summary>
+      <section class="row">
+        <h2>Our Mission</h2>
+        <div class="row-body">
+          <p>Make community resources easy to find, understand, and use, on any device.</p>
+        </div>
+      </section>
+      <section class="row">
+        <h2>Why It Exists</h2>
+        <div class="row-body">
+          <p>Help is often spread across many websites, PDFs, and flyers. Pinellas Connect puts it in one searchable place with a map, events, and a saved list.</p>
+        </div>
+      </section>
+      <section class="row" id="demo-data">
+        <h2>About the Data</h2>
+        <div class="row-body">
           <ul class="points">
-            <li>Map: Leaflet 1.9.4 (BSD-2-Clause). Map data © OpenStreetMap contributors (ODbL).</li>
-            <li>Geocoding: OpenStreetMap Nominatim and the U.S. Census Bureau Geocoder.</li>
-            <li>Font: Inter by Rasmus Andersson (SIL Open Font License).</li>
-            <li>Logo and icons: original work for this project.</li>
-            <li>Independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</li>
-          </ul>
-        </details>
-
-        <h2 id="metrics">Project notes</h2>
-        <p style="margin-bottom:16px">Success metrics and build details for reviewers.</p>
-        <details>
-          <summary>Success metrics</summary>
-          <div class="table-wrap">
-            <table>
-              <caption class="visually-hidden">Success metrics and goals</caption>
-              <thead><tr><th scope="col">Metric</th><th scope="col">Goal</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">Zero-result search rate</th><td>Under 10%</td></tr>
-                <tr><th scope="row">“Helpful” rating on details</th><td>80% or higher</td></tr>
-                <tr><th scope="row">Listings re-verified in 90 days</th><td>100%</td></tr>
-                <tr><th scope="row">Core Web Vitals</th><td>LCP &lt; 2.5 s, INP &lt; 200 ms, CLS &lt; 0.1</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="muted" style="margin-bottom:12px">Live counts from this browser (stored in localStorage): zero-result rate <strong id="zero-rate">—</strong>, helpful rating <strong id="helpful-rate">—</strong>.</p>
+          <li>Every listing, event, phone number, and map pin is <strong>fictional</strong>. They show how the site works without sending anyone to a real service by mistake.</li>
+          <li>Phone numbers use the 555-0100 to 555-0199 range, which is reserved for fiction. Pins sit near each city's center, not at real addresses.</li>
+          <li>There are no fictional crisis lines. The <a href="emergency.html">Emergency page</a>, header, and footer use only real, official numbers and links, with sources listed.</li>
+          <li>City names and categories are real, so the filters make sense for Pinellas County.</li>
+        </ul>
+        </div>
+      </section>
+      <section class="row">
+        <h2>Design Decisions</h2>
+        <div class="row-body">
+          <ul class="points">
+          <li><strong>Search first.</strong> A large search bar opens the home page, because many users go straight to search [1].</li>
+          <li><strong>Filters above results.</strong> Category, city, and cost filters update results instantly, a common pattern for browsing large lists [2].</li>
+          <li><strong>Type and space do the work.</strong> Large, confident headlines, generous white space, and hairline dividers instead of boxes, so each page has one clear focus. Blue marks actions; red is saved for urgent items.</li>
+          <li><strong>A few strong moments.</strong> A full-width photo hero, a framed map, and big emergency numbers, instead of many identical cards.</li>
+          <li><strong>Phone first.</strong> Most U.S. adults own a smartphone [3], so every page was laid out for phones first, then tablet and desktop.</li>
+          <li><strong>The same parts on every page.</strong> One header, footer, list row, button, and pop-up design, so people learn the site once.</li>
+          <li><strong>Inter typeface.</strong> Designed for reading on screens [4], with the device's own font as a backup.</li>
+        </ul>
+        </div>
+      </section>
+      <section class="row">
+        <h2>Accessibility</h2>
+        <div class="row-body">
+          <ul class="points">
+          <li>Text meets WCAG 2.2 AA contrast of at least 4.5:1 [5].</li>
+          <li>Buttons and links are at least 24 by 24 pixels (WCAG 2.5.8), and most are 40–48 pixels [5][6].</li>
+          <li>Everything works with a keyboard, with a visible focus ring and a “Skip to main content” link.</li>
+          <li>Result counts and save confirmations are announced to screen readers (WCAG 4.1.3) [5].</li>
+          <li>The map has a list view with the same results, so nothing is shown only visually.</li>
+          <li>An accessibility button in the bottom corner of every page with larger text, high contrast, reading highlight, and reading spacing (WCAG 1.4.12). Settings are saved on this device.</li>
+          <li>Pages reflow at 320 pixels wide and at 200% text without sideways scrolling (WCAG 1.4.10, 1.4.4).</li>
+          <li>Animations turn off for people who prefer reduced motion [7].</li>
+        </ul>
+        </div>
+      </section>
+      <section class="row" id="metrics">
+        <h2>Measuring Success</h2>
+        <div class="row-body">
+          <p style="margin-bottom:16px">Targets for usability testing and launch, using standard web metrics.</p>
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">Success metrics and targets</caption>
+            <thead><tr><th scope="col">Metric</th><th scope="col">Target</th><th scope="col">How We Measure</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Task completion rate</th><td>90% or more</td><td>Moderated test with 5+ users [8]: “Find a food pantry in your city, save it, and reopen it from Saved.”</td></tr>
+              <tr><th scope="row">Time to resource</th><td>Median 60 seconds or less</td><td>From opening the site to opening the right resource's details. Also logged in this browser (below).</td></tr>
+              <tr><th scope="row">Interactions to resource</th><td>6 or fewer</td><td>Clicks or taps for the food pantry task. Current design: 6.</td></tr>
+              <tr><th scope="row">Zero-result search rate</th><td>Under 10%</td><td>Searches that return nothing, which shows missing content.</td></tr>
+              <tr><th scope="row">Helpfulness rating</th><td>80% or more “Yes”</td><td>“Was this helpful?” in each details pop-up.</td></tr>
+              <tr><th scope="row">System Usability Scale (SUS)</th><td>80 or higher</td><td>Ten-question survey after testing [9].</td></tr>
+              <tr><th scope="row">Lighthouse accessibility score</th><td>95 or higher</td><td>Chrome DevTools audit of every page.</td></tr>
+              <tr><th scope="row">Core Web Vitals</th><td>“Good”</td><td>LCP under 2.5 s, INP under 200 ms, CLS under 0.1 [10].</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <details class="disclosure">
+          <summary>Live Counts From This Browser</summary>
+          <p class="muted" style="margin-bottom:12px">Stored only in this browser's localStorage. Median time to resource: <strong id="time-to-resource">—</strong>. Zero-result rate: <strong id="zero-rate">—</strong>. Helpful rating: <strong id="helpful-rate">—</strong>.</p>
           <div class="table-wrap">
             <table>
               <caption class="visually-hidden">Actions counted in this browser</caption>
@@ -127,18 +122,47 @@
               <tbody id="metrics-body"></tbody>
             </table>
           </div>
-          <button id="reset-metrics" class="button button-small button-secondary" type="button">Reset counts</button>
+          <button id="reset-metrics" class="button button-small button-secondary" type="button">Reset Counts</button>
         </details>
-        <details>
-          <summary>How it's built</summary>
+        </div>
+      </section>
+      <section class="row">
+        <h2>How It Was Built</h2>
+        <div class="row-body">
           <ul class="points">
-            <li>Plain HTML, CSS, and JavaScript. No framework or build step.</li>
-            <li>All listings live in one data file, so every page stays in sync.</li>
-            <li>Built to WCAG 2.2 AA: keyboard access, visible focus, labeled fields, list view for the map, reduced-motion support.</li>
-            <li>Leaflet with OpenStreetMap tiles: free, with no API key.</li>
-          </ul>
-        </details>
-      </div>
+          <li><strong>Plan:</strong> chose resident needs and categories, sketched phone-first wireframes, and mapped 8 pages.</li>
+          <li><strong>Design:</strong> built one design system of colors, type sizes, spacing, and components.</li>
+          <li><strong>Build:</strong> plain HTML, CSS, and JavaScript with all listings in one data file, so every page stays in sync.</li>
+          <li><strong>Test:</strong> checked phone, tablet, and desktop layouts, keyboard use, contrast, and the map's offline fallback.</li>
+        </ul>
+        </div>
+      </section>
+      <section class="row" id="sources">
+        <h2>Sources &amp; Credits</h2>
+        <div class="row-body">
+          <ol class="sources-list">
+          <li>Nielsen Norman Group, “Search: Visible and Simple.” nngroup.com/articles/search-visible-and-simple</li>
+          <li>Nielsen Norman Group, “Filters vs. Facets: Definitions.” nngroup.com/articles/filters-vs-facets</li>
+          <li>Pew Research Center, “Mobile Fact Sheet.” pewresearch.org/internet/fact-sheet/mobile</li>
+          <li>Rasmus Andersson, “Inter typeface family.” rsms.me/inter</li>
+          <li>W3C, “Web Content Accessibility Guidelines (WCAG) 2.2.” w3.org/TR/WCAG22</li>
+          <li>Apple, “Human Interface Guidelines: Accessibility.” developer.apple.com/design/human-interface-guidelines/accessibility</li>
+          <li>MDN Web Docs, “prefers-reduced-motion.” developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion</li>
+          <li>Nielsen Norman Group, “Why You Only Need to Test with 5 Users.” nngroup.com/articles/why-you-only-need-to-test-with-5-users</li>
+          <li>John Brooke, “SUS: A Quick and Dirty Usability Scale,” in <em>Usability Evaluation in Industry</em> (1996).</li>
+          <li>Google, web.dev, “Web Vitals.” web.dev/articles/vitals</li>
+        </ol>
+        <ul class="points" style="margin-top:20px">
+          <li>Emergency information: Pinellas County Emergency Management, NOAA, NWS, FEMA, 988 Lifeline, and First Contact 211. See the <a href="emergency.html">Emergency page</a>.</li>
+          <li>Home photo: “St. Petersburg Waterfront, Florida 2019” by pasa47, via <a href="https://commons.wikimedia.org/wiki/File:St._Petersburg_Waterfront,_Florida_2019.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. Resized and cropped.</li>
+          <li>Emergency image: “Hurricane Milton Eyes Florida,” GOES-16 imagery by NOAA and CSU/CIRA, via <a href="https://commons.wikimedia.org/wiki/File:Hurricane_Milton_Eyes_Florida_(CIRA_2024-10-08_-_2024010082220_g16_fd_geocolor_milton-eyes-florida_labels).png">Wikimedia Commons</a>, public domain.</li>
+          <li>Map: Leaflet 1.9.4 (BSD-2-Clause). Map data © OpenStreetMap contributors (ODbL).</li>
+          <li>Font: Inter (SIL Open Font License) via Google Fonts.</li>
+          <li>Logo and icons: original work for this project.</li>
+          <li>Independent FBLA student project. Not affiliated with Pinellas County Government.</li>
+        </ul>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -146,6 +170,41 @@
     <div class="dialog-inner">
       <button id="close-dialog" class="icon-button close-button" type="button" aria-label="Close details"><span data-icon="close"></span></button>
       <div id="dialog-content"></div>
+    </div>
+  </dialog>
+
+  <dialog id="menu-drawer" class="drawer" aria-label="Menu">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <p>Menu</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close menu"><span data-icon="close"></span></button>
+      </div>
+      <nav aria-label="Menu">
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="about.html#sources">Sources &amp; Credits</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </dialog>
+
+  <button id="a11y-button" class="a11y-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options"><span data-icon="disability"></span></button>
+  <dialog id="a11y-panel" class="a11y-panel" aria-labelledby="a11y-title">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <p id="a11y-title">Accessibility</p>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close accessibility options"><span data-icon="close"></span></button>
+      </div>
+      <label class="switch">Larger Text <input type="checkbox" data-pref="large-text"></label>
+      <label class="switch">High Contrast <input type="checkbox" data-pref="high-contrast"></label>
+      <label class="switch">Reading Highlight <input type="checkbox" data-pref="reading-highlight"></label>
+      <label class="switch">Reading Spacing <input type="checkbox" data-pref="reading-spacing"></label>
+      <div class="a11y-actions">
+        <button id="a11y-reset" class="button button-small button-secondary" type="button">Reset</button>
+        <button class="button button-small" type="button" data-close-dialog>Done</button>
+      </div>
+      <p class="muted" style="font-size:.8125rem;margin-top:12px">Saved on this device. Animations follow your system’s reduce-motion setting.</p>
     </div>
   </dialog>
 
@@ -158,6 +217,7 @@
         </div>
         <nav aria-label="Footer">
           <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
             <li><a href="resources.html">Resources</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="events.html">Events</a></li>
@@ -170,14 +230,14 @@
         </nav>
       </div>
       <div class="footer-bottom">
-        <p>In an emergency, call <a href="tel:911">911</a>. Services change, so confirm before you go.</p>
-        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government or any listed organization.</p>
+        <p>In an emergency, call <a href="tel:911">911</a>. For local help, call <a href="tel:211">211</a>.</p>
+        <p>&copy; <span class="js-year">2026</span> Pinellas Connect, an independent FBLA student project. Not affiliated with Pinellas County Government.</p>
       </div>
     </div>
   </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/about.js"></script>
+  <script src="js/data.js?v=7"></script>
+  <script src="js/main.js?v=7"></script>
+  <script src="js/about.js?v=7"></script>
 </body>
 </html>
